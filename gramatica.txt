@@ -1,0 +1,25 @@
+
+
+GRAMATICA
+
+<programa> -> 
+<sentencia> ->  <ini-var>
+                | <if>
+                | <while>
+                | <read>
+                | <write>
+                | ''                
+
+
+
+<ini-var> -> <variable>"="(<variable> | <operacion>)
+<operacion> -> <valor><operador><valor>
+<valor> -> <variable> | <numero>
+<operador> -> "+" | "-" | "*" | "/" | "%"
+
+<variable> -> "$"<letra><alfanumerico>
+<letra> -> a....z
+<numero> -> <digito><numero>
+<digito> -> 0-1.....9
+<alfanumero> = <letra><alfanumerico> | <numero><alfanumerico> | ''
+
