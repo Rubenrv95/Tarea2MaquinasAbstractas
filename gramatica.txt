@@ -2,7 +2,8 @@
 
 GRAMATICA
 
-<programa> -> 
+<programa> -> <codigo>
+<codigo> -> <sentencia><codigo> | ''
 <sentencia> ->  <ini-var>
                 | <if>
                 | <while>
@@ -10,12 +11,21 @@ GRAMATICA
                 | <write>
                 | ''                
 
+<if> -> "if"<condicion> "then" <codigo> "endif;" 
+    ||  "if" <condicion> "then" <codigo> "else" <codigo> "endif;"
+<condicion> -> "("<valor> <condicional> <valor>")"
 
+<while> -> "while" <condicion> "do" <codigo> "wend;"
 
-<ini-var> -> <variable>"="(<variable> | <operacion>)
-<operacion> -> <valor><operador><valor>
-<valor> -> <variable> | <numero>
+<read> -> "read" <variable>";"
+
+<write> -> "write" <valor>";"
+
+<ini-var> -> <variable>"="<valor>
+<valor> -> <variable> | <numero> | <operacion> | "("<operacion>")"
+<operacion> -> <valor><operador><valor> | ''
 <operador> -> "+" | "-" | "*" | "/" | "%"
+<condicional> ->  "<", ">", "<=" , ">=" , "==", "!="
 
 <variable> -> "$"<letra><alfanumerico>
 <letra> -> a....z
@@ -23,3 +33,10 @@ GRAMATICA
 <digito> -> 0-1.....9
 <alfanumero> = <letra><alfanumerico> | <numero><alfanumerico> | ''
 
+
+(3+5)*6
+operacion
+valor operador valor
+(operacion) operador valor
+(valor operador valor) operador valor
+(numero operador numero) operador valor
