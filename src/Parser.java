@@ -59,6 +59,43 @@ public class Parser {
         return true;
     }
 
+    public boolean parseOperando(char c) {
+        switch (c) {
+            case '+':
+                return true;
+            case '-':
+                return true;
+            case '*':
+                return true;
+            case '/':
+                return true;
+            case '%':
+                return true;
+        }
+        return false;
+    }
+
+    public boolean parseCondicional(String cond) {
+        switch (cond) {
+            case "<":
+                return true;
+            case ">":
+                return true;
+            case "<=":
+                return true;
+            case ">=":
+                return true;
+            case "==":
+                return true;
+            case "!=":
+                return true;
+        }
+        return false;
+    }
+
+
+
+
     /*
     public void setPila(String linea){
 
