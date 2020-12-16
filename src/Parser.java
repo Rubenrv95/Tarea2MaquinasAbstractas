@@ -12,13 +12,27 @@ public class Parser {
             String linea = pila.peek();
             if(linea.length() > 0){
                 if(linea.startsWith("$")){
-                    if(!parseVariable(linea)){
-                        System.out.println("F");
+                    if( linea.endsWith(";")){
+                        String aux = linea.substring(0, linea.length()-1);
+                        String[] split = aux.split(" ");
+                        if(split.length == 3){
+                            if( !parseVariable(split[0]) || split[1] == "=" || !parseValor(split[2])){
+                                System.out.println("F1");
+                                return false;
+                            }
+                        }
+                        else{
+                            System.out.println("F2");
+                            return false;
+                        }
+                    }
+                    else{
+                        System.out.println("F3");
                         return false;
                     }
                 }
                 else{
-                    System.out.println("F");
+                    System.out.println("F4");
                     return false;
                 }
                 pila.pop();
@@ -41,13 +55,16 @@ public class Parser {
     }
 
     public boolean parseVariable(String linea){
-        String nombre = linea.substring(1);
-        String primera = Character.toString(nombre.charAt(0));
-        String resto = nombre.substring(1);
-        if( !parseLetra(primera) || !parseAlfanumerico(resto)){
-            return false;
+        if(linea.startsWith("$")){
+            String nombre = linea.substring(1);
+            String primera = Character.toString(nombre.charAt(0));
+            String resto = nombre.substring(1);
+            if( !parseLetra(primera) || !parseAlfanumerico(resto)){
+                return false;
+            }
+            return true;
         }
-        return true;
+        return false;
     }
 
     public boolean parseAlfanumerico(String texto){
@@ -103,6 +120,43 @@ public class Parser {
         }
         return true;
     }
+
+    public boolean parseOperando(String c) {
+        switch (c) {
+            case "+":
+                return true;
+            case "-":
+                return true;
+            case "*":
+                return true;
+            case "/":
+                return true;
+            case "%":
+                return true;
+        }
+        return false;
+    }
+
+    public boolean parseCondicional(String cond) {
+        switch (cond) {
+            case "<":
+                return true;
+            case ">":
+                return true;
+            case "<=":
+                return true;
+            case ">=":
+                return true;
+            case "==":
+                return true;
+            case "!=":
+                return true;
+        }
+        return false;
+    }
+
+
+
 
     /*
     public void setPila(String linea){
