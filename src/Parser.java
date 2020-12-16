@@ -1,4 +1,3 @@
-import java.util.Collections;
 import java.util.Stack;
 
 public class Parser {
@@ -11,16 +10,62 @@ public class Parser {
     public boolean parseLinea(){
         while(pila.size() > 0){
             String linea = pila.peek();
-            String[] aux = linea.split("");
-            for(int i = 0; i < aux.length; i++){
-                if(!parseLetra(aux[i])){
+            if(linea.length() > 0){
+                if(linea.startsWith("$")){
+                    if(!parseVariable(linea)){
+                        System.out.println("F");
+                        return false;
+                    }
+                }
+                else{
                     System.out.println("F");
                     return false;
                 }
-            }
-            pila.pop();
+                pila.pop();
+            }                        
         }
         System.out.println("buenardo");
+        return true;
+    }
+
+    public boolean parseValor(String linea){
+        if(parseVariable(linea)){
+            return true;
+        }
+        else if(parseNumero(linea)){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    public boolean parseVariable(String linea){
+        String nombre = linea.substring(1);
+        String primera = Character.toString(nombre.charAt(0));
+        String resto = nombre.substring(1);
+        if( !parseLetra(primera) || !parseAlfanumerico(resto)){
+            return false;
+        }
+        return true;
+    }
+
+    public boolean parseAlfanumerico(String texto){
+        if(texto.length() > 0){            
+            String letra = Character.toString(texto.charAt(0));            
+            if( !parseLetra(letra) && !parseNumero(letra)){
+                return false;
+            }
+            if(texto.length() > 1){
+                if(!parseAlfanumerico(texto.substring(1))){
+                    return false;
+                }
+            }
+            else{
+                return true;
+            }
+            
+        }        
         return true;
     }
 
