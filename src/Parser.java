@@ -28,6 +28,18 @@ public class Parser {
         return true;
     }
 
+    public boolean parseValor(String linea){
+        if(parseVariable(linea)){
+            return true;
+        }
+        else if(parseNumero(linea)){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
     public boolean parseVariable(String linea){
         String nombre = linea.substring(1);
         String primera = Character.toString(nombre.charAt(0));
