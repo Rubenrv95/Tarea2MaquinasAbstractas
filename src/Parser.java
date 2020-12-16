@@ -11,7 +11,13 @@ public class Parser {
         while(pila.size() > 0){
             String linea = pila.peek();
             if(linea.length() > 0){
-                if(!parseAlfanumerico(linea)){
+                if(linea.startsWith("$")){
+                    if(!parseVariable(linea)){
+                        System.out.println("F");
+                        return false;
+                    }
+                }
+                else{
                     System.out.println("F");
                     return false;
                 }
@@ -22,10 +28,19 @@ public class Parser {
         return true;
     }
 
+    public boolean parseVariable(String linea){
+        String nombre = linea.substring(1);
+        String primera = Character.toString(nombre.charAt(0));
+        String resto = nombre.substring(1);
+        if( !parseLetra(primera) || !parseAlfanumerico(resto)){
+            return false;
+        }
+        return true;
+    }
+
     public boolean parseAlfanumerico(String texto){
         if(texto.length() > 0){            
-            String letra = Character.toString(texto.charAt(0));
-            System.out.println(letra);
+            String letra = Character.toString(texto.charAt(0));            
             if( !parseLetra(letra) && !parseNumero(letra)){
                 return false;
             }
