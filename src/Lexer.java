@@ -30,4 +30,20 @@ public class Lexer {
         return true;
     }
 
+    public boolean isOperando(char c) {
+        switch (c) {
+            case'+':
+                return true;
+            case'-':
+                return true;
+            case'*':
+                return true;
+            case'/':
+                return true;
+            case'%':
+                return true;
+        }
+
+        return false;
+    }
 }
