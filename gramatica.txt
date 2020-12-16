@@ -4,6 +4,8 @@ GRAMATICA
 
 <programa> -> <codigo>
 <codigo> -> <sentencia><codigo> | ''
+<codigo> -> <sentencia>
+<codigo> -> <codigo>
 <sentencia> ->  <ini-var>
                 | <if>
                 | <while>
@@ -30,6 +32,7 @@ GRAMATICA
 <variable> -> "$"<letra><alfanumerico>
 <letra> -> a....z
 <numero> -> <digito><numero>
+<numero> -> <digito>
 <digito> -> 0-1.....9
 <alfanumero> = <letra><alfanumerico> | <numero><alfanumerico> | ''
 
