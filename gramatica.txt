@@ -3,10 +3,8 @@
 GRAMATICA
 
 <programa> -> <codigo>
-<codigo> -> <sentencia><codigo> | ''
-<codigo> -> <sentencia>
-<codigo> -> <codigo>
-<sentencia> ->  <ini-var>
+<codigo> -> <instruccion><codigo> | ''
+<instruccion> ->  <ini-var>
                 | <if>
                 | <while>
                 | <read>
