@@ -7,38 +7,107 @@ public class Parser {
         this.pila = pila;
     }
 
-    public boolean parseLinea(){
-        while(pila.size() > 0){
+    public boolean parseCodigo(){
+        if(pila.size() != 0){
             String linea = pila.peek();
-            if(linea.length() > 0){
-                if(linea.startsWith("$")){
-                    if( linea.endsWith(";")){
-                        String aux = linea.substring(0, linea.length()-1);
-                        String[] split = aux.split(" ");
-                        if(split.length == 3){
-                            if( !parseVariable(split[0]) || split[1] == "=" || !parseValor(split[2])){
-                                System.out.println("F1");
-                                return false;
-                            }
-                        }
-                        else{
-                            System.out.println("F2");
-                            return false;
-                        }
-                    }
-                    else{
-                        System.out.println("F3");
-                        return false;
-                    }
-                }
-                else{
-                    System.out.println("F4");
-                    return false;
-                }
-                pila.pop();
-            }                        
+            if(!parseInstruccion(linea)){
+                System.out.println("F en codigo");
+                return false;
+            }
+            pila.pop();
+            parseCodigo();
         }
         System.out.println("buenardo");
+        return true;
+    }
+
+    public boolean parseInstruccion(String linea){
+        if(linea.length() > 0){
+            if(linea.startsWith("$")){
+                if(!parseInicializacion(linea)){
+                    System.out.println("F ini");
+                    return false;
+                }
+            }
+            else if(linea.startsWith("r")){
+                if(!parseRead(linea)){
+                    System.out.println("F read");
+                    return false;
+                }
+            }
+            else if(linea.startsWith("w")){
+                if(!parseWrite(linea)){
+                    System.out.println("F write");
+                    return false;
+                }
+            }
+        }                        
+        return true;
+    }
+
+    public boolean parseInicializacion(String linea){
+        if( linea.endsWith(";")){
+            String aux = linea.substring(0, linea.length()-1);
+            String[] split = aux.split(" ");
+            if(split.length == 3){
+                if( !parseVariable(split[0]) || !split[1].equals("=") || !parseValor(split[2])){
+                    System.out.println("F1");
+                    return false;
+                }
+            }
+            else{
+                System.out.println("F2");
+                return false;
+            }
+        }
+        else{
+            System.out.println("F3");
+            return false;
+        }
+        return true;
+    }
+
+    public boolean parseRead(String linea){
+        if(linea.endsWith(";")){
+            String contenido = linea.substring(0,linea.length()-1);
+            String[] partes = contenido.split(" ");
+            if(partes.length == 2){
+                if( !partes[0].equals("read") || !parseVariable(partes[1])){
+                    System.out.println("read malo o no var");
+                    return false;
+                }
+            }
+            else{
+                System.out.println("formato read incorrecto");
+                return false;
+            }
+        }
+        else{
+            System.out.println("no ;");
+            return false;
+        }
+        return true;
+    }
+
+    public boolean parseWrite(String linea){
+        if(linea.endsWith(";")){
+            String contenido = linea.substring(0,linea.length()-1);
+            String[] partes = contenido.split(" ");
+            if(partes.length == 2){
+                if(!partes[0].equals("write") || !parseValor(partes[1])){
+                    System.out.println("write o var/num malo");
+                    return false;
+                }
+            }
+            else{
+                System.out.println("formato malo");
+                return false;
+            }
+        }
+        else{
+            System.out.println("no ;");
+            return false;
+        }
         return true;
     }
 

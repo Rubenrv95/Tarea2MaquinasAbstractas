@@ -18,7 +18,7 @@ public class Main {
         entrada.close();
 
         Parser p = new Parser(pila);
-        p.parseLinea();
+        p.parseCodigo();
     }
 
     //para ejecutar: cmd /c 'java -jar T2MALF.jar < ejemplo.txt'
