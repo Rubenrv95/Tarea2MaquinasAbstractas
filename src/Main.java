@@ -19,6 +19,7 @@ public class Main {
 
         Parser p = new Parser(pila);
         p.parseCodigo();
+        p.parseOperacion("$n = 1 + $n + 32 ;");
     }
 
     //para ejecutar: cmd /c 'java -jar T2MALF.jar < ejemplo.txt'

@@ -190,6 +190,68 @@ public class Parser {
         return true;
     }
 
+    public void parseOperacion(String op) {
+
+        String[] token = op.split(" "); //separamos por espacio
+        System.out.println(op);
+        for (int i=0; i< token.length; i++) {
+            System.out.print("[" + token[i] + "] ");
+        }
+        if (this.parseVariable(token[0]) == true) {
+            if (token[1].equals("=") && this.parseOperando(token[2]) == false) {
+                for (int i=2; i<token.length; i++) { //partimos del 2 ya que el espacio anterior es el signo "="
+                    if (token[i].equals(";")) {
+                        break;
+                    }
+
+                    if (this.parseValor(token[i]) == true) {
+                        if (this.parseOperando(token[i+1])== true && this.parseOperando(token[i-1])==true) {
+
+                        }
+                        else {
+                            if (token[i-1].equals("=") || token[i+1].equals(";")) {
+
+                            }
+                            else {
+                                System.out.println(token[i]);
+                                System.out.println("Error de sintaxis 4 valor");
+                                return;
+                            }
+                        }
+                    }
+                    else if (this.parseOperando(token[i]) == true) {
+                        if (this.parseValor(token[i-1])==true && this.parseValor(token[i+1])==true) {
+
+                        }
+                        else {
+                            System.out.println(token[i]);
+                            System.out.println("Error de sintaxis 4 operando");
+                            return;
+                        }
+                    }
+                    else {
+                        System.out.println("Error de sintaxis 3");
+                        return;
+                    }
+                }
+            }
+            else {
+                System.out.println("Error de sintaxis 2");
+                return;
+            }
+
+        }
+        else {
+            System.out.println("Error de sintaxis 1");
+            return;
+        }
+
+        System.out.println();
+        System.out.println("Está escrito correctamente");
+
+    }
+
+
     public boolean parseOperando(String c) {
         switch (c) {
             case "+":
