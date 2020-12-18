@@ -21,7 +21,7 @@ public class Main {
         p.parseCodigo();
         // String op = "1 + $pinky * $z";
         // //p.parseOperacion(op);
-        // p.parseCondicion("( 1 + 5 ) >= 23 + 2");
+        //p.parseCondicion("( 1 + 5 ) > 23 + 2");
 
         //e.verificarVariable(op);
 
