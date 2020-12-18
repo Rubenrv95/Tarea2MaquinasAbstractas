@@ -3,9 +3,11 @@ import java.util.Stack;
 
 public class Parser {
     private Stack<String> pila;
+    private Ejecucion ejecucion;
 
     public Parser(Stack<String> pila){
         this.pila = pila;   
+        this.ejecucion = new Ejecucion();
     }
 
     public boolean parseCodigo(){
@@ -46,6 +48,14 @@ public class Parser {
                 if(!parseIf(linea)){
                     return false;
                 }
+            }
+            else if(linea.startsWith("wh")){
+                if(!parseWhile(linea)){
+                    return false;
+                }
+            }
+            else{
+                return false;
             }
         }                        
         return true;
@@ -97,6 +107,48 @@ public class Parser {
         else{
             return false;
         }
+    }
+
+    public boolean parseWhile(String linea){
+        if(linea.startsWith("while")){
+            String resto1 = linea.substring(5,linea.length());
+            if( resto1.startsWith(" ") && resto1.endsWith(" do")){
+                String resto2 = resto1.substring(1,resto1.length()-3);
+                if(resto2.startsWith("(") && resto2.endsWith(")")){
+                    resto2 = resto2.substring(0,resto2.length()-2);
+                    resto2 = resto2.substring(2,resto2.length());
+                    System.out.println(resto2);
+                    if(!parseCondicion(resto2)){
+                        return false;
+                    }
+                    else{
+                        Stack<String> ins = new Stack<>();
+                        ins.push(linea);
+                        this.pila.pop();
+                        while(!pila.empty()){
+                            if(pila.peek().equals("wend;")){
+                                return true;
+                            }
+                            else{
+                                if(!parseInstruccion(pila.peek())){
+                                    return false;
+                                }
+                                ins.push(pila.peek());
+                                this.pila.pop();
+                            }
+                        }
+                        return false;
+                    }
+                }
+                else{
+                    return false;
+                }
+            }
+            else{
+                return false;
+            }
+        }
+        return false;
     }
 
     public boolean parseInicializacion(String linea){
