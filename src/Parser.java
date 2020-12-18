@@ -334,6 +334,10 @@ public class Parser {
                 }
             }
             else if (this.parseOperando(token[i]) == true) {
+                if (i==0 || i== token.length-1) {
+                    System.out.println("Error de sintaxis operando");
+                    return false;
+                }
                 if (this.parseValor(token[i-1])==true && this.parseValor(token[i+1])==true) {
 
                 }
