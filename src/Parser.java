@@ -1,5 +1,6 @@
 import java.util.Stack;
 
+
 public class Parser {
     private Stack<String> pila;
 
@@ -35,7 +36,7 @@ public class Parser {
                     return false;
                 }
             }
-            else if(linea.startsWith("w")){
+            else if(linea.startsWith("wr")){
                 if(!parseWrite(linea)){
                     System.out.println("F write");
                     return false;
@@ -43,7 +44,7 @@ public class Parser {
             }
             else if(linea.startsWith("i")){
                 if(!parseIf(linea)){
-
+                    return false;
                 }
             }
         }                        
@@ -58,22 +59,44 @@ public class Parser {
                 if(resto2.startsWith("(") && resto2.endsWith(")")){
                     resto2 = resto2.substring(0,resto2.length()-2);
                     resto2 = resto2.substring(2,resto2.length());
+                    System.out.println(resto2);
                     if(!parseCondicion(resto2)){
                         return false;
                     }
                     else{
-                        System.out.println("weno");
+                        Stack<String> ins = new Stack<>();
+                        ins.push(linea);
+                        this.pila.pop();
+                        while(!pila.empty()){
+                            if(pila.peek().equals("endif;")){
+                                return true;
+                            }
+                            else if( pila.peek().equals("else")){
+                                ins.push(pila.peek());
+                                this.pila.pop();
+                            }
+                            else{
+                                if(!parseInstruccion(pila.peek())){
+                                    return false;
+                                }
+                                ins.push(pila.peek());
+                                this.pila.pop();
+                            }
+                        }
+                        return false;
                     }
                 }
                 else{
                     return false;
                 }
             }
+            else{
+                return false;
+            }
         }
         else{
             return false;
         }
-        return true;
     }
 
     public boolean parseInicializacion(String linea){
@@ -458,7 +481,6 @@ public class Parser {
         return true;
     }
 
-
     public boolean parseOperando(String c) {
         switch (c) {
             case "+":
@@ -495,16 +517,4 @@ public class Parser {
         }
     }
 
-
-
-
-    /*
-    public void setPila(String linea){
-
-        this.pila.push(linea);
-    }*/
-    /*
-    public void reverse(){
-        Collections.reverse(this.pila);
-    }*/
 }
