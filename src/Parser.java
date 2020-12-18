@@ -190,6 +190,101 @@ public class Parser {
         return true;
     }
 
+    public boolean parseCondicion (String op) {
+        String[] token = op.split(" "); //separamos por espacio
+        System.out.println(op);
+        for (int i=0; i< token.length; i++) {
+            System.out.print("[" + token[i] + "] ");
+        }
+
+        for (int i = 0; i < token.length; i++) {
+
+            if (this.parseCondicional(token[i])) {
+
+
+                int y = i;
+                String[] aux = new String[y];
+                for (int j = 0; j < y; j++) {
+                    aux[j] = token[j];
+                }
+
+                String s = "";
+                for (int j = 0; j < aux.length; j++) {
+                    if (j==0) {
+                        s = s + aux[j];
+                    }
+                    else {
+                        s = s + " " + aux[j];
+
+                    }
+                }
+
+                System.out.println(s);
+
+                if (this.parseOperacion(s) == true) {
+
+                }
+                else if (this.parseValor(s) == true) {
+
+                }
+                else {
+                    System.out.println("Error de sintaxis");
+                    return false;
+                }
+
+
+
+                y = i+1;
+                String[] aux_2 = new String[token.length-y];
+                int z = 0;
+                for (int j = y; j < token.length; j++) {
+                    if (j==token.length) {
+                        break;
+                    }
+                    aux_2[z] = token[j];
+                    z++;
+                }
+
+                s = "";
+                for (int j = 0; j < aux_2.length; j++) {
+                    if (j==0) {
+                        s = s + aux_2[j];
+                    }
+                    else {
+                        s = s + " " + aux_2[j];
+
+                    }
+                }
+
+                System.out.println(s);
+
+                if (this.parseOperacion(s) == true) {
+
+                }
+                else if (this.parseValor(s) == true) {
+
+                }
+                else {
+                    System.out.println("Error de sintaxis");
+                    return false;
+                }
+
+                System.out.println("Escrito correctamente");
+                return true;
+            }
+
+
+
+
+        }
+
+        System.out.println("Error de sintaxis en el condicional");
+        return false;
+
+
+
+    }
+
     public boolean parseOperacion(String op) {
 
         String[] token = op.split(" "); //separamos por espacio
@@ -205,14 +300,25 @@ public class Parser {
         for (int i = 0; i < token.length ; i++) {
             System.out.println(token[i]);
             if (token[i].equals("(")) { //si la operacion está hecha en parentesis
-                if (i == 0 || i == token.length-1) {
+                p_iniciales++;
+                if (i==0) {
+                    if (token[i+1].equals("(") ) {
+                        continue;
 
+                    }
                 }
-                else if (this.parseOperando(token[i-1]) == true || token[i-1].equals("(") || token[i+1].equals("(") ) {
+                else if (i==token.length-1) {
+                    System.out.println("Error de sintaxis");
+                    return false;
+                }
+                else {
+                    if (this.parseOperando(token[i-1]) == true || token[i-1].equals("(") || token[i+1].equals("(")){
 
+                    }
                 }
-                else if (this.parseValor(token[i+1]) == true) {
-                    String[] aux = new String[token.length];
+
+                if (this.parseValor(token[i+1]) == true) {
+                    String[] nuevo_arreglo = new String[token.length];
                     int aux_i=0;
                     int z = 0;
                     for (int j = i+1; j < token.length; j++) {
@@ -221,10 +327,12 @@ public class Parser {
                             break;
                         }
                         else {
-                            aux[z] = token[j];
+                            nuevo_arreglo[z] = token[j];
                         }
                         z++;
                     }
+
+                    String[] aux = nuevo_arreglo;
 
                     String s = "";
                     int y=0;
@@ -249,7 +357,7 @@ public class Parser {
                     if (b!=true) {
                         return false;
                     }
-                    i=aux_i;
+                    i=aux_i-1;
 
                 }
                 else {
@@ -257,8 +365,6 @@ public class Parser {
                     System.out.println("Error de sintaxis paréntesis inicial");
                     return false;
                 }
-                p_iniciales++;
-
             }
 
 
@@ -305,6 +411,7 @@ public class Parser {
             }
 
             else if (token[i].equals(")")) {
+                p_finales++;
                 if (i == token.length-1) {
                     break;
                 }
@@ -316,8 +423,6 @@ public class Parser {
                     System.out.println("Error de sintaxis parentesis final");
                     return false;
                 }
-                p_finales++;
-
             }
             else {
                 System.out.println(token[i]);
@@ -327,6 +432,7 @@ public class Parser {
         }
 
         if (p_iniciales != p_finales) {
+            System.out.println(p_iniciales + " " + p_finales);
             System.out.println("Error de sintaxis. Número de paréntesis no coincide");
             return false;
         }
@@ -348,8 +454,9 @@ public class Parser {
                 return true;
             case "%":
                 return true;
+            default:
+                return false;
         }
-        return false;
     }
 
     public boolean parseCondicional(String cond) {
@@ -366,8 +473,9 @@ public class Parser {
                 return true;
             case "!=":
                 return true;
+            default:
+                return false;
         }
-        return false;
     }
 
 

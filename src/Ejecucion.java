@@ -16,7 +16,6 @@ public class Ejecucion {
 
 
         for (int i = 0; i < s.length(); i++) {
-            System.out.println(s.charAt(i));
             if (s.charAt(i) == '$') {
                 String var = "";
                 int y = i;
@@ -32,6 +31,9 @@ public class Ejecucion {
 
                 System.out.println(var);
 
+                s = s.replaceAll(var, "pene"); //se reemplazan la variable por su valor en el string
+
+                System.out.println(s);
                 /*
                 String valor_variable = (String) h.get(var); //obtenemos el valor de la variable del hash
 
