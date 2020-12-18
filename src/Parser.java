@@ -172,6 +172,7 @@ public class Parser {
                             System.out.println("cago 1");
                             return false;
                         }
+                        this.ejecucion.ejecutar(linea);
                         return true;
                     }
                     else{
