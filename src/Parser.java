@@ -197,37 +197,51 @@ public class Parser {
         for (int i=0; i< token.length; i++) {
             System.out.print("[" + token[i] + "] ");
         }
-        if (this.parseVariable(token[0]) == true) {
+
+
+        if (this.parseVariable(token[0]) == true) { //cuando se parte definiendo una variable
             if (token[1].equals("=") && this.parseOperando(token[2]) == false) {
                 for (int i=2; i<token.length; i++) { //partimos del 2 ya que el espacio anterior es el signo "="
                     if (token[i].equals(";")) {
                         break;
+                    }
+                    if (token[i].equals("(") || token[i].equals(")")) {
+                        continue;
                     }
 
                     if (this.parseValor(token[i]) == true) {
                         if (this.parseOperando(token[i+1])== true && this.parseOperando(token[i-1])==true) {
 
                         }
-                        else {
-                            if (token[i-1].equals("=") || token[i+1].equals(";")) {
+                        else if (token[i-1].equals("(") || token[i+1].equals(")")) {
 
-                            }
-                            else {
-                                System.out.println(token[i]);
-                                System.out.println("Error de sintaxis 4 valor");
-                                return;
-                            }
+                        }
+
+                        else if (token[i-1].equals("=") || token[i+1].equals(";")) {
+
+                        }
+                        else {
+                            System.out.println(token[i]);
+                            System.out.println("Error de sintaxis 4 valor");
+                            return;
                         }
                     }
                     else if (this.parseOperando(token[i]) == true) {
                         if (this.parseValor(token[i-1])==true && this.parseValor(token[i+1])==true) {
 
                         }
+                        else if (token[i-1].equals("(") || token[i+1].equals(")") || token[i+1].equals("(") || token[i-1].equals(")")) {
+
+                        }
                         else {
+                            System.out.println(token[i-1]);
                             System.out.println(token[i]);
                             System.out.println("Error de sintaxis 4 operando");
                             return;
                         }
+                    }
+                    else if (token[i].equals("(") || token[i].equals(")")) {
+
                     }
                     else {
                         System.out.println("Error de sintaxis 3");
@@ -241,6 +255,86 @@ public class Parser {
             }
 
         }
+
+
+        else if (token[0].equals("(")){ //si la operacion está hecha en parentesis
+            for (int i=2; i<token.length; i++) { //partimos del 2 ya que el espacio anterior es el signo "="
+                if (token[i].equals(")")) {
+                    break;
+                }
+
+                if (this.parseValor(token[i]) == true) {
+                    if (this.parseOperando(token[i+1])== true && this.parseOperando(token[i-1])==true) {
+
+                    }
+                    else {
+                        if (token[i-1].equals("(") || token[i+1].equals(")")) {
+
+                        }
+                        else {
+                            System.out.println(token[i]);
+                            System.out.println("Error de sintaxis 4 valor");
+                            return;
+                        }
+                    }
+                }
+                else if (this.parseOperando(token[i]) == true) {
+                    if (this.parseValor(token[i-1])==true && this.parseValor(token[i+1])==true) {
+
+                    }
+                    else {
+                        System.out.println(token[i]);
+                        System.out.println("Error de sintaxis 4 operando");
+                        return;
+                    }
+                }
+                else {
+                    System.out.println("Error de sintaxis 3");
+                    return;
+                }
+            }
+        }
+
+
+        else if (this.parseValor(token[0])==true) { //Lo primero que se encuentras en la linea es un valor
+            for (int i=0; i<token.length; i++) {
+                if (this.parseValor(token[i]) == true) {
+                    if (i==0) {
+
+                    }
+                    else if (i==token.length-1) {
+                        break;
+                    }
+                    else  {
+                        if (this.parseOperando(token[i+1])== true && this.parseOperando(token[i-1])==true) {
+
+                        }
+                        else {
+                            System.out.println(token[i]);
+                            System.out.println("Error de sintaxis 4 valor");
+                            return;
+                        }
+
+                    }
+                }
+                else if (this.parseOperando(token[i]) == true) {
+                    if (this.parseValor(token[i-1])==true && this.parseValor(token[i+1])==true) {
+
+                    }
+                    else {
+                        System.out.println(token[i]);
+                        System.out.println("Error de sintaxis 4 operando");
+                        return;
+                    }
+                }
+                else {
+                    System.out.println("Error de sintaxis 3");
+                    return;
+                }
+            }
+
+        }
+
         else {
             System.out.println("Error de sintaxis 1");
             return;

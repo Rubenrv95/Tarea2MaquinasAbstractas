@@ -19,7 +19,7 @@ public class Main {
 
         Parser p = new Parser(pila);
         p.parseCodigo();
-        p.parseOperacion("$n = 1 + $n + 32 ;");
+        p.parseOperacion("$a = 2 * 4 + 9 + ( 8 - 7 ) ;");
     }
 
     //para ejecutar: cmd /c 'java -jar T2MALF.jar < ejemplo.txt'
