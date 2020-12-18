@@ -9,7 +9,7 @@ public class Ejecucion {
     {
         this.variables = new HashMap<String, BigInteger>();
         this.scanner = new Scanner(System.in);
-        variables.put("$n", BigInteger.valueOf(1));
+        //variables.put("$n", BigInteger.valueOf(1));
         //variables.put("$fib1", BigInteger.valueOf(1));
         //variables.put("$fib2", BigInteger.valueOf(1));
 
@@ -17,7 +17,7 @@ public class Ejecucion {
 
         //ejecutar("write $n + 1;");
 
-        ejecutar("$n = $fib1 + $fib2;");
+        //ejecutar("$n = $fib1 + $fib2;");
 
         //System.out.println(infixToPostfix("( 1000 + (354 * ( 2 * 355 ) ) + 1"));
         //System.out.println(infixToPostfix("( 1 + 3 * ( 2 * 3 ) ) + 1"));

@@ -7,7 +7,6 @@ public class Main {
 
     public static void main(String[] args){
         pila = new Stack<>();
-        /*
         Scanner entrada = new Scanner(System.in);
         
         String linea = entrada.nextLine();
