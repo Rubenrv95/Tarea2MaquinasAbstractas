@@ -41,7 +41,38 @@ public class Parser {
                     return false;
                 }
             }
+            else if(linea.startsWith("i")){
+                if(!parseIf(linea)){
+
+                }
+            }
         }                        
+        return true;
+    }
+
+    public boolean parseIf(String linea){
+        if(linea.startsWith("if")){
+            String resto1 = linea.substring(2,linea.length());
+            if( resto1.startsWith(" ") && resto1.endsWith(" then")){
+                String resto2 = resto1.substring(1,resto1.length()-5);
+                if(resto2.startsWith("(") && resto2.endsWith(")")){
+                    resto2 = resto2.substring(0,resto2.length()-2);
+                    resto2 = resto2.substring(2,resto2.length());
+                    if(!parseCondicion(resto2)){
+                        return false;
+                    }
+                    else{
+                        System.out.println("weno");
+                    }
+                }
+                else{
+                    return false;
+                }
+            }
+        }
+        else{
+            return false;
+        }
         return true;
     }
 
@@ -287,10 +318,10 @@ public class Parser {
 
         String[] token = op.split(" "); //separamos por espacio
         //System.out.println(op);
-        // for (int i=0; i< token.length; i++) {
-        //     System.out.print("[" + token[i] + "] ");
-        // }
-        // System.out.println();
+        for (int i=0; i< token.length; i++) {
+            System.out.print("[" + token[i] + "] ");
+        }
+        System.out.println();
         int p_iniciales=0;
         int p_finales=0;
         for (int i = 0; i < token.length ; i++) {
@@ -354,18 +385,32 @@ public class Parser {
                     return false;
                 }
             }
+            else if (token[i].equals(")")) {
+                p_finales++;
+                if (i == token.length-1) {
+                    break;
+                }
+                else if (this.parseOperando(token[i+1])==true || this.parseValor(token[i-1]) == true) {
+                }
+                else {
+                    System.out.println(token[i]);
+                    System.out.println("Error de sintaxis parentesis final");
+                    return false;
+                }
+            }
             else if (this.parseOperando(token[i]) == true) {
                 if (i==0 || i== token.length-1) {
                     System.out.println("Error de sintaxis operando");
                     return false;
                 }
-                if (this.parseValor(token[i-1])==true && this.parseValor(token[i+1])==true) {
+                if (token[i-1].equals("(") || token[i+1].equals("(") || token[i-1].equals(")") || token[i-1].equals(")")) {
+
+                }
+                else if (this.parseValor(token[i-1])==true && this.parseValor(token[i+1])==true) {
 
                 }
 
-                else if (token[i-1].equals("(") || token[i+1].equals("(") || token[i-1].equals(")") || token[i-1].equals(")")) {
-
-                }
+                
 
                 else {
                     System.out.println(token[i]);
@@ -396,21 +441,6 @@ public class Parser {
                         return false;
                     }
 
-                }
-            }
-
-            
-            else if (token[i].equals(")")) {
-                p_finales++;
-                if (i == token.length-1) {
-                    break;
-                }
-                else if (this.parseOperando(token[i+1])==true || this.parseValor(token[i-1]) == true) {
-                }
-                else {
-                    System.out.println(token[i]);
-                    System.out.println("Error de sintaxis parentesis final");
-                    return false;
                 }
             }
             else {
