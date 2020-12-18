@@ -20,7 +20,6 @@ public class Parser {
             pila.pop();
             parseCodigo();
         }
-        System.out.println("buenardo");
         return true;
     }
 
@@ -213,6 +212,7 @@ public class Parser {
             System.out.println("no ;");
             return false;
         }
+        this.ejecucion.ejecutar(linea);
         return true;
     }
 
@@ -236,6 +236,7 @@ public class Parser {
             System.out.println("no ;");
             return false;
         }
+        this.ejecucion.ejecutar(linea);
         return true;
     }
 

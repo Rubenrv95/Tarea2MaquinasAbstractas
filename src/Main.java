@@ -15,7 +15,7 @@ public class Main {
             linea = entrada.nextLine();
         }
         Collections.reverse(pila);
-        entrada.close();
+        
 
         Parser p = new Parser(pila);
         p.parseCodigo();

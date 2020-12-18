@@ -149,11 +149,11 @@ public class Ejecucion {
 
         while(errorBigInt){
             try{
-                n = scanner.nextBigInteger();
+                n = this.scanner.nextBigInteger();
                 errorBigInt = false;
             }catch(InputMismatchException e){
                 System.out.println("Error BigInt: debe ingresar un valor valido");
-                scanner.next();
+                this.scanner.next();
             }
         }
         if(variables.containsKey(str[1]))
