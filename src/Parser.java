@@ -47,18 +47,39 @@ public class Parser {
 
     public boolean parseInicializacion(String linea){
         if( linea.endsWith(";")){
-            String aux = linea.substring(0, linea.length()-1);
-            String[] split = aux.split(" ");
-            if(split.length == 3){
-                if( !parseVariable(split[0]) || !split[1].equals("=") || !parseValor(split[2])){
-                    System.out.println("F1");
-                    return false;
+            if(linea.startsWith("$")){
+                String linea2 = linea.substring(1,linea.length());
+                String[] caracteres = linea2.split("");
+                String nombre = "";
+                for(int i = 0; i < caracteres.length ; i++){
+                    if(parseAlfanumerico(caracteres[i])){
+                        nombre = nombre + caracteres[i];
+                    }
+                    else if(caracteres[i].equals(" ")){
+                        if( caracteres[i+1].equals("=")){
+                            String aux = linea.substring(i+4,linea.length()-1);
+                            if(!parseValor(aux)){
+                                System.out.println("F");
+                                return false;
+                            }
+                        }
+                        else{
+                            System.out.println("cago 1");
+                            return false;
+                        }
+                        return true;
+                    }
+                    else{
+                        System.out.println("cago 2");
+                        return false;
+                    }
                 }
             }
             else{
-                System.out.println("F2");
+                System.out.println("F");
                 return false;
             }
+            
         }
         else{
             System.out.println("F3");
