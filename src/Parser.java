@@ -275,6 +275,7 @@ public class Parser {
         for (int i=0; i< token.length; i++) {
             System.out.print("[" + token[i] + "] ");
         }
+        System.out.println();
         for (int i = 0; i < token.length; i++) {
             if (this.parseCondicional(token[i])) {
                 int y = i;
@@ -349,10 +350,11 @@ public class Parser {
         int p_finales=0;
         for (int i = 0; i < token.length ; i++) {
             if (token[i].equals("(")) { //si la operacion está hecha en parentesis
+                int cont = 0;
                 p_iniciales++;
                 if (i==0) {
                     if (token[i+1].equals("(") ) {
-                        continue;
+
                     }
                 }
                 else if (i==token.length-1) {
@@ -368,29 +370,37 @@ public class Parser {
                     int aux_i=0;
                     int z = 0;
                     for (int j = i+1; j < token.length; j++) {
-                        if (token[j].equals(")")) {
+                        if (token[j].equals(")") && cont==0) {
                             aux_i = j;
                             break;
+                        }
+                        else if (token[j].equals(")") && cont>0) {
+                            nuevo_arreglo[z] = token[j];
+                            cont--;
+                        }
+                        else if (token[j].equals("(")) {
+                            nuevo_arreglo[z] = token[j];
+                            cont++;
                         }
                         else {
                             nuevo_arreglo[z] = token[j];
                         }
                         z++;
                     }
-                    String[] aux = nuevo_arreglo;
+
+
+                    String[] aux = new String[token.length];
+                    for (int j = 0; j < token.length; j++) {
+                        aux[j] = nuevo_arreglo[j];
+                    }
                     String s = "";
                     int y=0;
-                    while (y<z) {
+                    while (y<aux.length && aux[y]!=null) {
                         if (y==0) {
                             s = s + aux[y];
                         }
                         else {
-                            if (this.parseOperando(String.valueOf(aux[y])) == false) {
-                                s= s + aux[y];
-                            }
-                            else {
-                                s = s + " " + aux[y] + " ";
-                            }
+                            s = s + " " + aux[y];
                         }
                         y++;
                     }
@@ -413,7 +423,15 @@ public class Parser {
                 if (i == token.length-1) {
                     break;
                 }
+                else if (i==0) {
+                    System.out.println(token[i]);
+                    System.out.println("Error de sintaxis parentesis final");
+                    return false;
+                }
                 else if (this.parseOperando(token[i+1])==true || this.parseValor(token[i-1]) == true) {
+                }
+                else if (token[i+1].equals(")") || token[i-1].equals(")")) {
+
                 }
                 else {
                     System.out.println(token[i]);
