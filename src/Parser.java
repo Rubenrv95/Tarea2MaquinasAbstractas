@@ -323,15 +323,15 @@ public class Parser {
             System.out.print("[" + token[i] + "] ");
         }
         System.out.println();
-        int p_iniciales=0;
-        int p_finales=0;
+        int p_iniciales=0; // numero de parentesis iniciales
+        int p_finales=0; //numero de parentesis finales
         for (int i = 0; i < token.length ; i++) {
             if (token[i].equals("(")) { //si la operacion está hecha en parentesis
                 int cont = 0;
                 p_iniciales++;
                 if (i==0) {
                     if (token[i+1].equals("(") ) {
-
+                        //sintaxis correcta
                     }
                 }
                 else if (i==token.length-1) {
@@ -406,8 +406,10 @@ public class Parser {
                     return false;
                 }
                 else if (this.parseOperando(token[i+1])==true || this.parseValor(token[i-1]) == true) {
+                    //sintaxis correcta
                 }
                 else if (token[i+1].equals(")") || token[i-1].equals(")")) {
+                    //sintaxis correcta
 
                 }
                 else {
@@ -421,11 +423,11 @@ public class Parser {
                     System.out.println("Error de sintaxis operando");
                     return false;
                 }
-                if (token[i-1].equals("(") || token[i+1].equals("(") || token[i-1].equals(")") || token[i-1].equals(")")) {
-
+                if (token[i+1].equals("(") || token[i-1].equals(")") || token[i-1].equals(")")) {
+                    //sintaxis correcta
                 }
                 else if (this.parseValor(token[i-1])==true && this.parseValor(token[i+1])==true) {
-
+                    //sintaxis correcta
                 }
 
                 
@@ -442,14 +444,14 @@ public class Parser {
                 }
                 else  {
                     if (i-1<0) {
-
+                        //sintaxis correcta
                     }
                     else if (this.parseOperando(token[i+1])== true && this.parseOperando(token[i-1])==true) {
-
+                        //sintaxis correcta
                     }
 
                     else if (token[i-1].equals("(") || token[i+1].equals("(") || token[i-1].equals(")") || token[i+1].equals(")")) {
-
+                        //sintaxis correcta
                     }
 
                     else {
@@ -467,7 +469,7 @@ public class Parser {
                 return false;
             }
         }
-        if (p_iniciales != p_finales) {
+        if (p_iniciales != p_finales) { //se compara el numero de parentesis iniciales y finales. Debe ser el mismo para que la sintaxis sea correcta
             System.out.println(p_iniciales + " " + p_finales);
             System.out.println("Error de sintaxis. Número de paréntesis no coincide");
             return false;
