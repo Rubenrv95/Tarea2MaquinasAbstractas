@@ -19,6 +19,12 @@ public class Main {
 
         Parser p = new Parser(pila);
         p.parseCodigo();
+        String op = "1 + $pinky * $z";
+        p.parseOperacion(op);
+        Ejecucion e = new Ejecucion();
+
+        e.verificarVariable(op);
+
     }
 
     //para ejecutar: cmd /c 'java -jar T2MALF.jar < ejemplo.txt'

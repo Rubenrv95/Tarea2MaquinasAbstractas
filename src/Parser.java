@@ -190,6 +190,152 @@ public class Parser {
         return true;
     }
 
+    public boolean parseOperacion(String op) {
+
+        String[] token = op.split(" "); //separamos por espacio
+        System.out.println(op);
+        for (int i=0; i< token.length; i++) {
+            System.out.print("[" + token[i] + "] ");
+        }
+
+        System.out.println();
+        int p_iniciales=0;
+        int p_finales=0;
+
+        for (int i = 0; i < token.length ; i++) {
+            System.out.println(token[i]);
+            if (token[i].equals("(")) { //si la operacion está hecha en parentesis
+                if (i == 0 || i == token.length-1) {
+
+                }
+                else if (this.parseOperando(token[i-1]) == true || token[i-1].equals("(") || token[i+1].equals("(") ) {
+
+                }
+                else if (this.parseValor(token[i+1]) == true) {
+                    String[] aux = new String[token.length];
+                    int aux_i=0;
+                    int z = 0;
+                    for (int j = i+1; j < token.length; j++) {
+                        if (token[j].equals(")")) {
+                            aux_i = j;
+                            break;
+                        }
+                        else {
+                            aux[z] = token[j];
+                        }
+                        z++;
+                    }
+
+                    String s = "";
+                    int y=0;
+                    while (y<z) {
+                        if (y==0) {
+                            s = s + aux[y];
+                        }
+                        else {
+                            if (this.parseOperando(String.valueOf(aux[y])) == false) {
+                                s= s + aux[y];
+                            }
+                            else {
+                                s = s + " " + aux[y] + " ";
+                            }
+                        }
+                        y++;
+                    }
+                    System.out.println("Este es el string: " + s);
+                    System.out.println();
+
+                    boolean b = parseOperacion(s);
+                    if (b!=true) {
+                        return false;
+                    }
+                    i=aux_i;
+
+                }
+                else {
+                    System.out.println(token[i]);
+                    System.out.println("Error de sintaxis paréntesis inicial");
+                    return false;
+                }
+                p_iniciales++;
+
+            }
+
+
+            else if (this.parseValor(token[i])==true) { //Lo primero que se encuentras en la linea es un valor
+                if (i==token.length-1) {
+                    break;
+                }
+                else  {
+                    if (i-1<0) {
+
+                    }
+                    else if (this.parseOperando(token[i+1])== true && this.parseOperando(token[i-1])==true) {
+
+                    }
+
+                    else if (token[i-1].equals("(") || token[i+1].equals("(") || token[i-1].equals(")") || token[i+1].equals(")")) {
+
+                    }
+
+                    else {
+
+                        System.out.println(token[i]);
+                        System.out.println("Error de sintaxis valor");
+                        return false;
+                    }
+
+                }
+            }
+
+            else if (this.parseOperando(token[i]) == true) {
+                if (this.parseValor(token[i-1])==true && this.parseValor(token[i+1])==true) {
+
+                }
+
+                else if (token[i-1].equals("(") || token[i+1].equals("(") || token[i-1].equals(")") || token[i-1].equals(")")) {
+
+                }
+
+                else {
+                    System.out.println(token[i]);
+                    System.out.println("Error de sintaxis operando");
+                    return false;
+                }
+            }
+
+            else if (token[i].equals(")")) {
+                if (i == token.length-1) {
+                    break;
+                }
+                else if (this.parseOperando(token[i+1])==true || this.parseValor(token[i-1]) == true) {
+
+                }
+                else {
+                    System.out.println(token[i]);
+                    System.out.println("Error de sintaxis parentesis final");
+                    return false;
+                }
+                p_finales++;
+
+            }
+            else {
+                System.out.println(token[i]);
+                System.out.println("Error de sintaxis general");
+                return false;
+            }
+        }
+
+        if (p_iniciales != p_finales) {
+            System.out.println("Error de sintaxis. Número de paréntesis no coincide");
+            return false;
+        }
+
+        System.out.println("Está escrito correctamente");
+        return true;
+    }
+
+
     public boolean parseOperando(String c) {
         switch (c) {
             case "+":
