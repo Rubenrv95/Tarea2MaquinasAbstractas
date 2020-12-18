@@ -19,10 +19,9 @@ public class Main {
 
         Parser p = new Parser(pila);
         p.parseCodigo();
-        String op = "1 + $pinky * $z";
-        //p.parseOperacion(op);
-        p.parseCondicion("( 1 + 5 ) >= 23 + 2");
-        Ejecucion e = new Ejecucion();
+        // String op = "1 + $pinky * $z";
+        // //p.parseOperacion(op);
+        // p.parseCondicion("( 1 + 5 ) >= 23 + 2");
 
         //e.verificarVariable(op);
 
