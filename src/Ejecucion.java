@@ -44,6 +44,7 @@ public class Ejecucion {
             }
         }
 
+
         String op2 = "";
         for(int i = 0; i < terminos.length; i++){
 
@@ -54,7 +55,7 @@ public class Ejecucion {
         //String o = infixToPostfix("(1000 + (354 * ( 2 * 355 ) ) + 1");
         String o = infixToPostfix(op2);
         //operacion = opPrueba.replace(" ", "");
-        System.out.println(o);
+        //System.out.println(o);
 
         Stack<Integer> stack = new Stack<>();
 
@@ -185,7 +186,7 @@ public class Ejecucion {
         }*/
     }
 
-    public int write(String sublinea)
+    public void write(String sublinea)
     {
         String str = sublinea.substring(6, sublinea.length()-1); //le quito el write y el ;
         System.out.println(str);
@@ -203,41 +204,44 @@ public class Ejecucion {
             }
             if(esValido)
             {
-                Iterator it = variables.entrySet().iterator();
-                boolean loEncontro = false;
+                if(sublinea.contains(" ")){
+                    Iterator it = variables.entrySet().iterator();
+                    boolean loEncontro = false;
 
-                BigInteger valor;
+                    BigInteger valor;
 
-                while (it.hasNext())
-                {
-                    Map.Entry pair = (Map.Entry) it.next();
-                    //Si encuentro la key, por el de la operac
-                    if(pair.getKey().equals(var))
+                    while (it.hasNext())
                     {
-                        valor = (BigInteger) (pair.getValue());
-                        String operacion = str.substring(i+1, str.length());
-                        operacion = valor +" "+ operacion;
-                        System.out.println(operacion);
-                        loEncontro = true;
-                        BigInteger resultado = calcular(operacion);
-                        System.out.println("Resultado: "+operacion);
-                        System.out.println("Antes: "+pair.getKey() + " = " + pair.getValue());
-                        variables.replace(var, resultado);
-                        System.out.println("Despues: "+pair.getKey() + " = " + pair.getValue());
-                        //Calcular y reemplazar
+                        Map.Entry pair = (Map.Entry) it.next();
+                        //Si encuentro la key, por el de la operac
+                        if(pair.getKey().equals(var))
+                        {
+                            valor = (BigInteger) (pair.getValue());
+                            String operacion = str.substring(i+1, str.length());
+                            operacion = valor +" "+ operacion;
+                            System.out.println(operacion);
+                            loEncontro = true;
+                            BigInteger resultado = calcular(operacion);
+                            System.out.println("Resultado: "+operacion);
+                            System.out.println("Antes: "+pair.getKey() + " = " + pair.getValue());
+                            variables.replace(var, resultado);
+                            System.out.println("Despues: "+pair.getKey() + " = " + pair.getValue());
+                            //Calcular y reemplazar
+                        }
+                    }
+                    if(!loEncontro){
+                        System.out.println("ERROR: La variable "+var+" no se encuentra inicializada");
                     }
                 }
-                if(!loEncontro){
-                    System.out.println("ERROR: La variable "+var+" no se encuentra inicializada");
-                    System.exit(0);
-                    return 0;
+                else{
+                    System.out.println("Valor: "+variables.get(var));
                 }
+
             }
         }
-        return 0;
     }
 
-    public int init(String linea)
+    public void init(String linea)
     {
         System.out.println(linea);
         String var = null;
@@ -261,8 +265,6 @@ public class Ejecucion {
                 if(!variables.containsKey(var)){
                     variables.put(var, BigInteger.valueOf(1));
                     System.out.println("ERROR: La variable "+var+" no se encuentra inicializada");
-                    System.exit(0);
-                    return 0;
                 }
                 while (it.hasNext())
                 {
@@ -284,7 +286,6 @@ public class Ejecucion {
                 }
             }
         }
-        return 0;
     }
 
 
