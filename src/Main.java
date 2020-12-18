@@ -7,6 +7,7 @@ public class Main {
 
     public static void main(String[] args){
         pila = new Stack<>();
+        /*
         Scanner entrada = new Scanner(System.in);
         
         String linea = entrada.nextLine();
@@ -21,9 +22,11 @@ public class Main {
         p.parseCodigo();
         String op = "1 + $pinky * $z";
         p.parseOperacion(op);
+
+         */
         Ejecucion e = new Ejecucion();
 
-        e.verificarVariable(op);
+        //e.verificarVariable(op);
 
     }
 
