@@ -21,7 +21,6 @@ public class Parser {
             System.out.println(linea);
             if( linea.startsWith("$") || linea.startsWith("write") || linea.startsWith("read") ){
                 this.ejecucion.ejecutar(linea);
-                System.out.println("Hola");
                 pilaEjecucion.pop();
             }
             else if (linea.startsWith("if")){
@@ -32,10 +31,8 @@ public class Parser {
                 int ifCount = 1;
                 Stack<String> ifIns = new Stack<>();
                 Stack<String> elseIns = new Stack<>();
-                System.out.println("alo?");
                 String instruccion = pilaEjecucion.peek();
                 while(ifCount != 0){
-                    System.out.println("xd");
                     if(instruccion.equals("else")){
                         elseStat = true;
                         ifStat = false;
@@ -57,7 +54,6 @@ public class Parser {
                 }
                 Collections.reverse(ifIns);
                 Collections.reverse(elseIns);
-                System.out.println("lo borra"+pilaEjecucion.peek());
                 pilaEjecucion.pop();
                 
                 String condicion = inicio.substring(3,inicio.length()-5);
@@ -269,7 +265,7 @@ public class Parser {
                             System.out.println("uwu");
                             return false;
                         }
-                        //this.ejecucion.ejecutar(linea);
+                        this.pilaTermino.push(linea);
                         return true;
                     }
                     else{
@@ -308,6 +304,7 @@ public class Parser {
             return false;
         }
         //this.ejecucion.ejecutar(linea);
+        this.pilaTermino.push(linea);
         return true;
     }
 
@@ -329,6 +326,7 @@ public class Parser {
             return false;
         }
         //this.ejecucion.ejecutar(linea);
+        this.pilaTermino.push(linea);
         return true;
     }
 
