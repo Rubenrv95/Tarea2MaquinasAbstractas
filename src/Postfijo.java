@@ -34,7 +34,6 @@ public class Postfijo {
         for(int i = 0; i < array.length; i++){
             char c = array[i].charAt(0);
 
-            System.out.println("char; "+ c);
             if(Character.isDigit(c))
             {
                 numero += array[i];
@@ -88,7 +87,6 @@ public class Postfijo {
     public String mostrarOperacion(){
         String salida = "";
         for (int i = 0; i < this.salida.size(); i++) {
-            //System.out.print(this.salida.get(i));
             salida += this.salida.get(i)+" ";
         }
         return salida;
