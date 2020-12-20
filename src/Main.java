@@ -7,7 +7,6 @@ public class Main {
 
     public static void main(String[] args){
         pila = new Stack<>();
-        /*
         Scanner entrada = new Scanner(System.in);
         
         String linea = entrada.nextLine();
@@ -16,15 +15,14 @@ public class Main {
             linea = entrada.nextLine();
         }
         Collections.reverse(pila);
-        entrada.close();
+        
 
         Parser p = new Parser(pila);
         p.parseCodigo();
-        String op = "1 + $pinky * $z";
-        p.parseOperacion(op);
-
-         */
-        Ejecucion e = new Ejecucion();
+        p.ejecutar();
+        // String op = "1 + $pinky * $z";
+        // //p.parseOperacion(op);
+        //p.parseCondicion("$d1 + ( 3 * 8 + ( 5 - 2 ) ) != $d2");
 
         //e.verificarVariable(op);
 

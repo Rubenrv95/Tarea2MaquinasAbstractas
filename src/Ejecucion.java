@@ -9,7 +9,7 @@ public class Ejecucion {
     {
         this.variables = new HashMap<String, BigInteger>();
         this.scanner = new Scanner(System.in);
-        variables.put("$n", BigInteger.valueOf(1));
+        //variables.put("$n", BigInteger.valueOf(1));
         //variables.put("$fib1", BigInteger.valueOf(1));
         //variables.put("$fib2", BigInteger.valueOf(1));
 
@@ -150,11 +150,11 @@ public class Ejecucion {
 
         while(errorBigInt){
             try{
-                n = scanner.nextBigInteger();
+                n = this.scanner.nextBigInteger();
                 errorBigInt = false;
             }catch(InputMismatchException e){
                 System.out.println("Error BigInt: debe ingresar un valor valido");
-                scanner.next();
+                this.scanner.next();
             }
         }
         if(variables.containsKey(str[1]))
@@ -193,49 +193,56 @@ public class Ejecucion {
         String var = null;
         boolean esOperacion = false;
         if(str.startsWith("$")){
-            int i;
-            for(i = 0; i < str.length(); i++)
-            {
-                if(str.charAt(i) == ' '){
-                    //Obtiene el string de la operacion
-                    var = str.substring(0, i);
-                    System.out.println(var);
-                    esOperacion = true;
-                    break;
+            if(!str.contains(" ")){
+                if(this.variables.containsKey(str)){
+                    System.out.println(this.variables.get(str));
                 }
-            }
-            if(esOperacion)
-            {
-                Iterator it = variables.entrySet().iterator();
-                boolean loEncontro = false;
-
-                BigInteger valor;
-
-                while (it.hasNext())
-                {
-                    Map.Entry pair = (Map.Entry) it.next();
-                    //Si encuentro la key, por el de la operac
-                    if(pair.getKey().equals(var))
-                    {
-                        valor = (BigInteger) (pair.getValue());
-                        String operacion = str.substring(i+1, str.length());
-                        operacion = valor +" "+ operacion;
-                        System.out.println(operacion);
-                        loEncontro = true;
-                        BigInteger resultado = calcular(operacion);
-                        System.out.println("Resultado: "+operacion);
-                        System.out.println("Antes: "+pair.getKey() + " = " + pair.getValue());
-                        variables.replace(var, resultado);
-                        System.out.println("Despues: "+pair.getKey() + " = " + pair.getValue());
-                        //Calcular y reemplazar
-                    }
-                }
-                if(!loEncontro){
+                else{
                     System.out.println("ERROR: La variable "+var+" no se encuentra inicializada");
                 }
             }
             else{
-                System.out.println("Valor: "+variables.get(var));
+                int i;
+                for(i = 0; i < str.length(); i++)
+                {
+                    if(str.charAt(i) == ' '){
+                        //Obtiene el string de la operacion
+                        var = str.substring(0, i);
+                        System.out.println(var);
+                        esOperacion = true;
+                        break;
+                    }
+                }
+                if(esOperacion)
+                {
+                    Iterator it = variables.entrySet().iterator();
+                    boolean loEncontro = false;
+
+                    BigInteger valor;
+
+                    while (it.hasNext())
+                    {
+                        Map.Entry pair = (Map.Entry) it.next();
+                        //Si encuentro la key, por el de la operac
+                        if(pair.getKey().equals(var))
+                        {
+                            valor = (BigInteger) (pair.getValue());
+                            String operacion = str.substring(i+1, str.length());
+                            operacion = valor +" "+ operacion;
+                            System.out.println(operacion);
+                            loEncontro = true;
+                            BigInteger resultado = calcular(operacion);
+                            System.out.println("Resultado: "+operacion);
+                            System.out.println("Antes: "+pair.getKey() + " = " + pair.getValue());
+                            variables.replace(var, resultado);
+                            System.out.println("Despues: "+pair.getKey() + " = " + pair.getValue());
+                            //Calcular y reemplazar
+                        }
+                    }
+                    if(!loEncontro){
+                        System.out.println("ERROR: La variable "+var+" no se encuentra inicializada");
+                    }
+                }
             }
         }
     }
@@ -300,7 +307,6 @@ public class Ejecucion {
 
 
         for (int i = 0; i < s.length(); i++) {
-            System.out.println(s.charAt(i));
             if (s.charAt(i) == '$') {
                 String var = "";
                 int y = i;
@@ -316,6 +322,9 @@ public class Ejecucion {
 
                 System.out.println(var);
 
+                s = s.replaceAll(var, "pene"); //se reemplazan la variable por su valor en el string
+
+                System.out.println(s);
                 /*
                 String valor_variable = (String) h.get(var); //obtenemos el valor de la variable del hash
 
