@@ -17,6 +17,7 @@ public class Main {
         Collections.reverse(pila);
         
 
+        Ejecucion e = new Ejecucion();
         Parser p = new Parser(pila);
         if(p.parseCodigo()){
             p.ejecutar(p.getPilaTermino());

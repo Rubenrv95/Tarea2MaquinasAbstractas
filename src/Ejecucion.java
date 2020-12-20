@@ -13,7 +13,7 @@ public class Ejecucion {
         //variables.put("$fib1", BigInteger.valueOf(1));
         //variables.put("$fib2", BigInteger.valueOf(1));
 
-        ejecutar("$d1 = 1 + ( 8 / 2 * 7 );");
+        //ejecutar("read $n;");
 
         //ejecutar("write $n + 1;");
 
@@ -189,7 +189,7 @@ public class Ejecucion {
     public void write(String sublinea)
     {
         String str = sublinea.substring(6, sublinea.length()-1); //le quito el write y el ;
-        //System.out.println(str);
+        System.out.println(str);
         String var = null;
         boolean esOperacion = false;
         if(str.startsWith("$")){
@@ -265,14 +265,13 @@ public class Ejecucion {
             }
             if(esValido)
             {
+                Iterator it = variables.entrySet().iterator();
+
                 BigInteger valor;
                 if(!variables.containsKey(var)){
                     variables.put(var, BigInteger.valueOf(1));
-                    //System.out.println("ERROR: La variable "+var+" no se encuentra inicializada");
+                    System.out.println("ERROR: La variable "+var+" no se encuentra inicializada");
                 }
-
-                Iterator it = variables.entrySet().iterator();
-
                 while (it.hasNext())
                 {
                     Map.Entry pair = (Map.Entry) it.next();
@@ -280,21 +279,15 @@ public class Ejecucion {
                     if(pair.getKey().equals(var))
                     {
                         valor = (BigInteger) (pair.getValue());
-                        String operacion = linea.substring(i+2, linea.length()-1);
+                        String operacion = linea.substring(i+1, linea.length()-1);
 
-                        if(operacion.contains(" ")){
-                            System.out.println("op:"+ operacion);
-                            BigInteger resultado = calcular(operacion);
-                            System.out.println("Resultado: "+resultado);
-                            System.out.println("Antes: "+pair.getKey() + " = " + pair.getValue());
-                            variables.replace(var, resultado);
-                            System.out.println("Despues: "+pair.getKey() + " = " + pair.getValue());
-                            //Calcular y reemplazar
-                        }
-                        else{
-                            variables.replace(var, BigInteger.valueOf(Integer.parseInt(operacion)));
-                            System.out.println(variables.get(var));
-                        }
+                        System.out.println("op:"+ operacion);
+                        BigInteger resultado = calcular(operacion);
+                        System.out.println("Resultado: "+resultado);
+                        System.out.println("Antes: "+pair.getKey() + " = " + pair.getValue());
+                        variables.replace(var, resultado);
+                        System.out.println("Despues: "+pair.getKey() + " = " + pair.getValue());
+                        //Calcular y reemplazar
                     }
                 }
             }
@@ -393,5 +386,148 @@ public class Ejecucion {
             }
         }
         return postfixString;
+    }
+
+    public boolean verificarCondicion(String s) {
+
+        System.out.println(s);
+
+        //Quitamos los parentesis de la condicion
+        s = s.substring(1, s.length() -1);
+        String[] token = s.split(" ");
+
+        String condicional = "";
+
+        /*Buscamos la condicional utilizada en la condicion evaluada */
+        for (int i = 0; i < token.length; i++) {
+            if (token[i].equals("<") || token[i].equals(">") || token[i].equals("<=")  || token[i].equals(">=")  || token[i].equals("==")  || token[i].equals("!=") ) {
+                condicional = token[i];
+                break;
+            }
+        }
+
+        //Separamos las partes de la izquierda y de la derecha de la condicion (Es decir, lo que viene antes y despues de la condicional)
+        String[] partes = s.split(condicional);
+        String parte1 = partes[0];
+        String parte2 = partes[1];
+
+        //ajustamos el string para quitar los espacios que sobran
+        parte1 = parte1.substring(1, parte1.length()-1);
+        parte2 = parte2.substring(1, parte2.length()-1);
+
+        BigInteger x = this.calcular(parte1);
+        BigInteger y = this.calcular(parte2);
+
+        switch (condicional) {
+            case "<":
+                if (x.compareTo(y) == -1) {
+                    System.out.println("Es cierta la condicion");
+                    return true;
+                }
+                else {
+                    System.out.println("Es falsa la condicion");
+                    return false;
+                }
+            case ">":
+                if (x.compareTo(y) == 1) {
+                    System.out.println("Es cierta la condicion");
+                    return true;
+                }
+                else {
+                    System.out.println("Es falsa la condicion");
+                    return false;
+                }
+            case "<=":
+                if (x.compareTo(y) == -1 || x.compareTo(y) == 0) {
+                    System.out.println("Es cierta la condicion. ");
+                    return true;
+                }
+                else {
+                    System.out.println("Es falsa la condicion");
+                    return false;
+                }
+            case ">=":
+                if (x.compareTo(y) == 1 || x.compareTo(y) == 0) {
+                    System.out.println("Es cierta la condicion");
+                    return true;
+                }
+                else {
+                    System.out.println("Es falsa la condicion");
+                    return false;
+                }
+            case "!=":
+                if (x != y) {
+                    System.out.println("Es cierta la condicion");
+                    return true;
+                }
+                else {
+                    System.out.println("Es falsa la condicion");
+                    return false;
+                }
+            case "==":
+                if (x == y) {
+                    System.out.println("Es cierta la condicion");
+                    return true;
+                }
+                else {
+                    System.out.println("Es falsa la condicion");
+                    return false;
+                }
+        }
+
+
+        System.out.println("Error al ingresar la condicional. No coincide");
+        return false;
+    }
+
+    public boolean comprobarVariables(String s) {
+
+        //quitamos los parentesis inicial y final
+        s = s.substring(1, s.length() -1);
+        String[] token = s.split(" ");
+
+        String condicional = "";
+
+        /*Buscamos la condicional utilizada en la condicion evaluada */
+        for (int i = 0; i < token.length; i++) {
+            if (token[i].equals("<") || token[i].equals(">") || token[i].equals("<=")  || token[i].equals(">=")  || token[i].equals("==")  || token[i].equals("!=") ) {
+                condicional = token[i];
+                break;
+            }
+        }
+
+        //Separamos las partes de la izquierda y de la derecha de la condicion (Es decir, lo que viene antes y despues de la condicional)
+        String[] partes = s.split(condicional);
+        String parte1 = partes[0];
+        String parte2 = partes[1];
+
+        //ajustamos los string para eliminar los espacios que sobran
+        parte1 = parte1.substring(1, parte1.length()-1);
+        parte2 = parte2.substring(1, parte2.length()-1);
+
+        // Ahora hay que encontrar todas las variables que empiezan por $ y encontrar su valor
+        String[] terminos1 = parte1.split(" ");
+        String[] terminos2 = parte2.split(" ");
+
+        for(int i = 0; i < terminos1.length; i++){
+            if(terminos1[i].startsWith("$")){
+                BigInteger r = obtenerValor(terminos1[i]);
+                if(r == null){
+                    return false;
+                }
+            }
+        }
+
+        for(int i = 0; i < terminos2.length; i++){
+            if(terminos2[i].startsWith("$")){
+                BigInteger r = obtenerValor(terminos2[i]);
+                if(r == null){
+                    return false;
+                }
+            }
+        }
+
+        System.out.println("Todas las variables son correctas y están almacenadas");
+        return true;
     }
 }
