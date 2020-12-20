@@ -14,7 +14,6 @@ public class Parser {
     }
 
     public void ejecutar( Stack<String> pilaEjecucion){
-        System.out.println("----- Comienza Ejecucion -----");
         while(!pilaEjecucion.empty()){
             
             String linea = pilaEjecucion.peek();
@@ -86,11 +85,10 @@ public class Parser {
                 }
             }
         }
-        System.out.println("----- Termina Ejecucion -----");
     }
 
     public boolean parseCodigo(){
-        if(pila.size() != 0){
+        while(!this.pila.empty()){
             String linea = pila.peek();
             if(!parseInstruccion(linea)){
                 System.out.println("ERROR");
@@ -109,16 +107,19 @@ public class Parser {
                 if(!parseInicializacion(linea)){
                     return false;
                 }
+                this.pilaTermino.push(linea);
             }
             else if(linea.startsWith("r")){
                 if(!parseRead(linea)){
                     return false;
                 }
+                this.pilaTermino.push(linea);
             }
             else if(linea.startsWith("wr")){
                 if(!parseWrite(linea)){
                     return false;
                 }
+                this.pilaTermino.push(linea);
             }
             else if(linea.startsWith("i")){
                 if(!parseIf(linea)){
@@ -165,7 +166,7 @@ public class Parser {
                             }
                             else if(this.parseInstruccion(aux)){
                                 if(!aux.startsWith("if") && !aux.startsWith("while")){
-                                    this.pilaTermino.push(aux);
+                                    
                                 }
                             }
                             else{
@@ -216,7 +217,7 @@ public class Parser {
                             }
                             else if(this.parseInstruccion(aux)){
                                 if(!aux.startsWith("while") && !aux.startsWith("if")){
-                                    this.pilaTermino.push(aux);
+                                    
                                 }
                             }
                             else{
@@ -262,7 +263,6 @@ public class Parser {
                         else{
                             return false;
                         }
-                        this.pilaTermino.push(linea);
                         return true;
                     }
                     else{
@@ -296,7 +296,6 @@ public class Parser {
         else{
             return false;
         }
-        this.pilaTermino.push(linea);
         return true;
     }
 
@@ -317,7 +316,6 @@ public class Parser {
         else{
             return false;
         }
-        this.pilaTermino.push(linea);
         return true;
     }
 

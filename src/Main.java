@@ -18,8 +18,11 @@ public class Main {
         Collections.reverse(pila);
         Parser p = new Parser(pila);
         if(p.parseCodigo()){
+            System.out.println("comienza ejecucion");
             p.ejecutar(p.getPilaTermino());
+            System.out.println("termina ejecucion");
         }
+        entrada.close();
     }
 
     //para ejecutar: cmd /c 'java -jar T2MALF.jar < ejemplo.txt'
