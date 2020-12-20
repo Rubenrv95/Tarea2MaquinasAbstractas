@@ -6,6 +6,7 @@ public class Main {
     private static Stack<String> pila;
 
     public static void main(String[] args){
+        /*
         pila = new Stack<>();
         Scanner entrada = new Scanner(System.in);
         

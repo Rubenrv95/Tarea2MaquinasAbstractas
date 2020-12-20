@@ -4,6 +4,7 @@ import java.util.*;
 public class Ejecucion {
     Map<String, BigInteger> variables;
     Scanner scanner;
+    Postfijo postfijo = new Postfijo();
 
     public Ejecucion()
     {
@@ -13,14 +14,11 @@ public class Ejecucion {
         //variables.put("$fib1", BigInteger.valueOf(1));
         //variables.put("$fib2", BigInteger.valueOf(1));
 
-        //ejecutar("read $n;");
+        ejecutar("$d1 = 1000 + (354 * ( 2 * 355 ) ) + 1;");
 
         //ejecutar("write $n + 1;");
 
         //ejecutar("$n = $fib1 + $fib2;");
-
-        //System.out.println(infixToPostfix("( 1000 + (354 * ( 2 * 355 ) ) + 1"));
-        //System.out.println(infixToPostfix("( 1 + 3 * ( 2 * 3 ) ) + 1"));
     }
 
 
@@ -50,24 +48,25 @@ public class Ejecucion {
 
             op2 = op2+" "+terminos[i];
         }
+
         System.out.println("Fin: "+op2);
 
-        //String o = infixToPostfix("(1000 + (354 * ( 2 * 355 ) ) + 1");
-        String o = infixToPostfix(op2);
-        //operacion = opPrueba.replace(" ", "");
-        //System.out.println(o);
+        op2 = op2.replace(" ", "");
+
+        String o = postfijo.InfijaAPostfija(op2);
+
+        System.out.println("postfix: "+ o);
 
         Stack<Integer> stack = new Stack<>();
 
         int i;
-
-        for(i=0; i < o.length(); i++)
+        for(i = 0; i < o.length(); i++)
         {
             char c = o.charAt(i);
 
             if(c == ' ')
             {
-
+                //Borrar
             }
             else if(Character.isDigit(c))
             {
@@ -75,7 +74,7 @@ public class Ejecucion {
 
                 while(Character.isDigit(c))
                 {
-                    n = n*10 + (int)(c-'0');
+                    n = n*10 + (int)(c -'0');
                     i++;
                     c = o.charAt(i);
                 }
@@ -110,7 +109,6 @@ public class Ejecucion {
             }
         }
         //System.out.println("R:" +stack.pop());
-
         return BigInteger.valueOf(stack.pop());
     }
 
@@ -165,25 +163,6 @@ public class Ejecucion {
         else{
             variables.put(str[1], n);
         }
-
-        /*
-        while (it.hasNext())
-        {
-            Map.Entry pair = (Map.Entry) it.next();
-
-            if(pair.getKey().equals(str[1]))
-            {
-                System.out.println("Antes: "+pair.getKey() + " = " + pair.getValue());
-                pair.setValue(n);
-                System.out.println("Dps: "+pair.getKey() + " = " + pair.getValue());
-            }
-        }*/
-        /*
-        if(loEncontro == false){
-            //Aqui se le agrega como value el resultado del calcular
-            variables.put(str[1], n);
-            System.out.println("put NUEVO: "+str[1]+" "+n);
-        }*/
     }
 
     public void write(String sublinea)
@@ -294,10 +273,7 @@ public class Ejecucion {
         }
     }
 
-
-
     public String verificarVariable(String s) {
-
 
         for (int i = 0; i < s.length(); i++) {
             if (s.charAt(i) == '$') {
@@ -328,206 +304,6 @@ public class Ejecucion {
                  */
             }
         }
-
         return s;
-    }
-
-    public String infixToPostfix(String expression) {
-        Stack<Character> stack = new Stack<Character>();
-        String postfixString = "";
-
-        for (int index = 0; index < expression.length(); ++index) {
-            char value = expression.charAt(index);
-            if (value == '(') {
-                stack.push('('); // Code Added
-            } else if (value == ')') {
-                Character oper = stack.peek();
-
-                while (!(oper.equals('(')) && !(stack.isEmpty())) {
-                    stack.pop();
-                    postfixString += oper.charValue();
-                    if (!stack.isEmpty()) // Code Added
-                        oper = stack.peek(); // Code Added
-                }
-                stack.pop(); // Code Added
-            } else if (value == '+' || value == '-') {
-                if (stack.isEmpty()) {
-                    stack.push(value);
-                } else {
-                    Character oper = stack.peek();
-                    while (!(stack.isEmpty() || oper.equals(('(')) || oper.equals((')')))) {
-                        oper = stack.pop(); // Code Updated
-                        postfixString += oper.charValue();
-                    }
-                    stack.push(value);
-                }
-            } else if (value == '*' || value == '/') {
-                if (stack.isEmpty()) {
-                    stack.push(value);
-                } else {
-                    Character oper = stack.peek();
-                    // while condition updated
-                    while (!oper.equals(('(')) && !oper.equals(('+')) && !oper.equals(('-')) && !stack.isEmpty()) {
-                        oper = stack.pop(); // Code Updated
-                        postfixString += oper.charValue();
-                    }
-                    stack.push(value);
-                }
-            } else {
-                postfixString += value;
-            }
-        }
-
-        while (!stack.isEmpty()) {
-            Character oper = stack.peek();
-            if (!oper.equals(('('))) {
-                stack.pop();
-                postfixString += oper.charValue();
-            }
-        }
-        return postfixString;
-    }
-
-    public boolean verificarCondicion(String s) {
-
-        System.out.println(s);
-
-        //Quitamos los parentesis de la condicion
-        s = s.substring(1, s.length() -1);
-        String[] token = s.split(" ");
-
-        String condicional = "";
-
-        /*Buscamos la condicional utilizada en la condicion evaluada */
-        for (int i = 0; i < token.length; i++) {
-            if (token[i].equals("<") || token[i].equals(">") || token[i].equals("<=")  || token[i].equals(">=")  || token[i].equals("==")  || token[i].equals("!=") ) {
-                condicional = token[i];
-                break;
-            }
-        }
-
-        //Separamos las partes de la izquierda y de la derecha de la condicion (Es decir, lo que viene antes y despues de la condicional)
-        String[] partes = s.split(condicional);
-        String parte1 = partes[0];
-        String parte2 = partes[1];
-
-        //ajustamos el string para quitar los espacios que sobran
-        parte1 = parte1.substring(1, parte1.length()-1);
-        parte2 = parte2.substring(1, parte2.length()-1);
-
-        BigInteger x = this.calcular(parte1);
-        BigInteger y = this.calcular(parte2);
-
-        switch (condicional) {
-            case "<":
-                if (x.compareTo(y) == -1) {
-                    System.out.println("Es cierta la condicion");
-                    return true;
-                }
-                else {
-                    System.out.println("Es falsa la condicion");
-                    return false;
-                }
-            case ">":
-                if (x.compareTo(y) == 1) {
-                    System.out.println("Es cierta la condicion");
-                    return true;
-                }
-                else {
-                    System.out.println("Es falsa la condicion");
-                    return false;
-                }
-            case "<=":
-                if (x.compareTo(y) == -1 || x.compareTo(y) == 0) {
-                    System.out.println("Es cierta la condicion. ");
-                    return true;
-                }
-                else {
-                    System.out.println("Es falsa la condicion");
-                    return false;
-                }
-            case ">=":
-                if (x.compareTo(y) == 1 || x.compareTo(y) == 0) {
-                    System.out.println("Es cierta la condicion");
-                    return true;
-                }
-                else {
-                    System.out.println("Es falsa la condicion");
-                    return false;
-                }
-            case "!=":
-                if (x != y) {
-                    System.out.println("Es cierta la condicion");
-                    return true;
-                }
-                else {
-                    System.out.println("Es falsa la condicion");
-                    return false;
-                }
-            case "==":
-                if (x == y) {
-                    System.out.println("Es cierta la condicion");
-                    return true;
-                }
-                else {
-                    System.out.println("Es falsa la condicion");
-                    return false;
-                }
-        }
-
-
-        System.out.println("Error al ingresar la condicional. No coincide");
-        return false;
-    }
-
-    public boolean comprobarVariables(String s) {
-
-        //quitamos los parentesis inicial y final
-        s = s.substring(1, s.length() -1);
-        String[] token = s.split(" ");
-
-        String condicional = "";
-
-        /*Buscamos la condicional utilizada en la condicion evaluada */
-        for (int i = 0; i < token.length; i++) {
-            if (token[i].equals("<") || token[i].equals(">") || token[i].equals("<=")  || token[i].equals(">=")  || token[i].equals("==")  || token[i].equals("!=") ) {
-                condicional = token[i];
-                break;
-            }
-        }
-
-        //Separamos las partes de la izquierda y de la derecha de la condicion (Es decir, lo que viene antes y despues de la condicional)
-        String[] partes = s.split(condicional);
-        String parte1 = partes[0];
-        String parte2 = partes[1];
-
-        //ajustamos los string para eliminar los espacios que sobran
-        parte1 = parte1.substring(1, parte1.length()-1);
-        parte2 = parte2.substring(1, parte2.length()-1);
-
-        // Ahora hay que encontrar todas las variables que empiezan por $ y encontrar su valor
-        String[] terminos1 = parte1.split(" ");
-        String[] terminos2 = parte2.split(" ");
-
-        for(int i = 0; i < terminos1.length; i++){
-            if(terminos1[i].startsWith("$")){
-                BigInteger r = obtenerValor(terminos1[i]);
-                if(r == null){
-                    return false;
-                }
-            }
-        }
-
-        for(int i = 0; i < terminos2.length; i++){
-            if(terminos2[i].startsWith("$")){
-                BigInteger r = obtenerValor(terminos2[i]);
-                if(r == null){
-                    return false;
-                }
-            }
-        }
-
-        System.out.println("Todas las variables son correctas y están almacenadas");
-        return true;
     }
 }
