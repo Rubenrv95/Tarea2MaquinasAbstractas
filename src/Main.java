@@ -17,6 +17,7 @@ public class Main {
         Collections.reverse(pila);
         
 
+        Ejecucion e = new Ejecucion();
         Parser p = new Parser(pila);
         p.parseCodigo();
         // String op = "1 + $pinky * $z";
@@ -24,6 +25,9 @@ public class Main {
         //p.parseCondicion("$d1 + ( 3 * 8 + ( 5 - 2 ) ) != $d2");
 
         //e.verificarVariable(op);
+        e.verificarCondicion("( 5 + 8 >= 3 + 1 )");
+
+
 
     }
 

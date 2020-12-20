@@ -387,4 +387,103 @@ public class Ejecucion {
         }
         return postfixString;
     }
+
+    public boolean verificarCondicion(String s) {
+
+        System.out.println(s);
+
+        s = s.substring(1, s.length() -1);
+        String[] token = s.split(" ");
+
+        String condicional = "";
+
+        /*Buscamos la condicional utilizada en la condicion evaluada */
+        for (int i = 0; i < token.length; i++) {
+            if (token[i].equals("<") || token[i].equals(">") || token[i].equals("<=")  || token[i].equals(">=")  || token[i].equals("==")  || token[i].equals("!=") ) {
+                condicional = token[i];
+                break;
+            }
+        }
+
+        //Separamos las partes de la izquierda y de la derecha de la condicion (Es decir, lo que viene antes y despues de la condicional)
+        String[] partes = s.split(condicional);
+        String parte1 = partes[0];
+        String parte2 = partes[1];
+
+        //ajustamos el string para quitar los espacios que sobran
+        parte1 = parte1.substring(1, parte1.length()-1);
+        parte2 = parte2.substring(1, parte2.length()-1);
+
+        BigInteger x = this.calcular(parte1);
+        BigInteger y = this.calcular(parte2);
+
+        int x_int = x.intValue();
+        int y_int = y.intValue();
+
+        System.out.println(x_int);
+        System.out.println(condicional);
+        System.out.println(y_int);
+
+
+        switch (condicional) {
+            case "<":
+                if (x_int < y_int) {
+                    System.out.println("Es cierta la condicion");
+                    return true;
+                }
+                else {
+                    System.out.println("Es falsa la condicion");
+                    return false;
+                }
+            case ">":
+                if (x_int > y_int) {
+                    System.out.println("Es cierta la condicion");
+                    return true;
+                }
+                else {
+                    System.out.println("Es falsa la condicion");
+                    return false;
+                }
+            case "<=":
+                if (x_int <= y_int) {
+                    System.out.println("Es cierta la condicion. ");
+                    return true;
+                }
+                else {
+                    System.out.println("Es falsa la condicion");
+                    return false;
+                }
+            case ">=":
+                if (x_int >= y_int) {
+                    System.out.println("Es cierta la condicion");
+                    return true;
+                }
+                else {
+                    System.out.println("Es falsa la condicion");
+                    return false;
+                }
+            case "!=":
+                if (x_int != y_int) {
+                    System.out.println("Es cierta la condicion");
+                    return true;
+                }
+                else {
+                    System.out.println("Es falsa la condicion");
+                    return false;
+                }
+            case "==":
+                if (x_int == y_int) {
+                    System.out.println("Es cierta la condicion");
+                    return true;
+                }
+                else {
+                    System.out.println("Es falsa la condicion");
+                    return false;
+                }
+        }
+
+
+        System.out.println("Error al ingresar la condicional. No coincide");
+        return false;
+    }
 }
