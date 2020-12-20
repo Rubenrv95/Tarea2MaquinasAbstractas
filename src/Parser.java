@@ -14,11 +14,9 @@ public class Parser {
     }
 
     public void ejecutar( Stack<String> pilaEjecucion){
-        System.out.println(pilaEjecucion.size());
         while(!pilaEjecucion.empty()){
             
             String linea = pilaEjecucion.peek();
-            System.out.println(linea);
             if( linea.startsWith("$") || linea.startsWith("write") || linea.startsWith("read") ){
                 this.ejecucion.ejecutar(linea);
                 pilaEjecucion.pop();
@@ -93,13 +91,12 @@ public class Parser {
         if(pila.size() != 0){
             String linea = pila.peek();
             if(!parseInstruccion(linea)){
-                System.out.println("fallo");
+                System.out.println("ERROR");
                 return false;
             }
             this.pila.pop();
-            // parseCodigo();
         }
-        System.out.println("exito");
+        System.out.println("Se ejecuto el programa con exito");
         Collections.reverse(this.pilaTermino);
         return true;
     }
@@ -257,31 +254,25 @@ public class Parser {
                         if( caracteres[i+1].equals("=")){
                             String aux = linea.substring(i+4,linea.length()-1);
                             if(!parseValor(aux)){
-                                System.out.println("owo");
                                 return false;
                             }
                         }
                         else{
-                            System.out.println("uwu");
                             return false;
                         }
                         this.pilaTermino.push(linea);
                         return true;
                     }
                     else{
-                        System.out.println("aca entonces?");
                         return false;
                     }
                 }
             }
             else{
-                System.out.println("xd");
                 return false;
             }
-            
         }
         else{
-            System.out.println("dx");
             return false;
         }
         return true;
@@ -303,7 +294,6 @@ public class Parser {
         else{
             return false;
         }
-        //this.ejecucion.ejecutar(linea);
         this.pilaTermino.push(linea);
         return true;
     }
@@ -325,7 +315,6 @@ public class Parser {
         else{
             return false;
         }
-        //this.ejecucion.ejecutar(linea);
         this.pilaTermino.push(linea);
         return true;
     }
@@ -413,11 +402,9 @@ public class Parser {
 
     public boolean parseCondicion (String op) {
         String[] token = op.split(" "); //separamos por espacio
-        //System.out.println(op);
-        for (int i=0; i< token.length; i++) {
-            System.out.print("[" + token[i] + "] ");
-        }
-        //System.out.println();
+        // for (int i=0; i< token.length; i++) {
+        //     System.out.print("[" + token[i] + "] ");
+        // }
         for (int i = 0; i < token.length; i++) {
             if (this.parseCondicional(token[i])) {
                 int y = i;
@@ -434,13 +421,11 @@ public class Parser {
                         s = s + " " + aux[j];
                     }
                 }
-                //System.out.println(s);
                 if (this.parseOperacion(s) == true) {
                 }
                 else if (this.parseValor(s) == true) {
                 }
                 else {
-                    //System.out.println("Error de sintaxis");
                     return false;
                 }
                 y = i+1;
@@ -462,32 +447,25 @@ public class Parser {
                         s = s + " " + aux_2[j];
                     }
                 }
-                //System.out.println(s);
                 if (this.parseOperacion(s) == true) {
                 }
                 else if (this.parseValor(s) == true) {
                 }
                 else {
-                    //System.out.println("Error de sintaxis");
                     return false;
                 }
-
-                //System.out.println("Escrito correctamente");
                 return true;
             }
         }
-        //System.out.println("Error de sintaxis en el condicional");
         return false;
     }
 
     public boolean parseOperacion(String op) {
 
         String[] token = op.split(" "); //separamos por espacio
-        //System.out.println(op);
-        for (int i=0; i< token.length; i++) {
-            System.out.print("[" + token[i] + "] ");
-        }
-        //System.out.println();
+        // for (int i=0; i< token.length; i++) {
+        //     System.out.print("[" + token[i] + "] ");
+        // }
         int p_iniciales=0; // numero de parentesis iniciales
         int p_finales=0; //numero de parentesis finales
         for (int i = 0; i < token.length ; i++) {
@@ -500,7 +478,6 @@ public class Parser {
                     }
                 }
                 else if (i==token.length-1) {
-                    //System.out.println("Error de sintaxis");
                     return false;
                 }
                 else {
@@ -546,8 +523,6 @@ public class Parser {
                         }
                         y++;
                     }
-                    //System.out.println("Este es el string: " + s);
-                    //System.out.println();
                     boolean b = parseOperacion(s);
                     if (b!=true) {
                         return false;
@@ -555,8 +530,6 @@ public class Parser {
                     i=aux_i-1;
                 }
                 else {
-                    //System.out.println(token[i]);
-                    //System.out.println("Error de sintaxis paréntesis inicial");
                     return false;
                 }
             }
@@ -566,8 +539,6 @@ public class Parser {
                     break;
                 }
                 else if (i==0) {
-                   // System.out.println(token[i]);
-                    //System.out.println("Error de sintaxis parentesis final");
                     return false;
                 }
                 else if (this.parseOperando(token[i+1])==true || this.parseValor(token[i-1]) == true) {
@@ -578,14 +549,11 @@ public class Parser {
 
                 }
                 else {
-                    //System.out.println(token[i]);
-                    //System.out.println("Error de sintaxis parentesis final");
                     return false;
                 }
             }
             else if (this.parseOperando(token[i]) == true) {
                 if (i==0 || i== token.length-1) {
-                    //System.out.println("Error de sintaxis operando");
                     return false;
                 }
                 if (token[i+1].equals("(") || token[i-1].equals(")") || token[i-1].equals(")")) {
@@ -598,8 +566,6 @@ public class Parser {
                 
 
                 else {
-                    //System.out.println(token[i]);
-                    //System.out.println("Error de sintaxis operando");
                     return false;
                 }
             }
@@ -620,26 +586,18 @@ public class Parser {
                     }
 
                     else {
-
-                        //System.out.println(token[i]);
-                        //System.out.println("Error de sintaxis valor");
                         return false;
                     }
 
                 }
             }
             else {
-                //System.out.println(token[i]);
-                //System.out.println("Error de sintaxis general");
                 return false;
             }
         }
         if (p_iniciales != p_finales) { //se compara el numero de parentesis iniciales y finales. Debe ser el mismo para que la sintaxis sea correcta
-            //System.out.println(p_iniciales + " " + p_finales);
-            //System.out.println("Error de sintaxis. Número de paréntesis no coincide");
             return false;
         }
-        //System.out.println("Está escrito correctamente");
         return true;
     }
 
