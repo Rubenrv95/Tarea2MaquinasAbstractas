@@ -4,6 +4,7 @@ import java.util.*;
 public class Ejecucion {
     Map<String, BigInteger> variables;
     Scanner scanner;
+    Postfijo postfijo = new Postfijo();
 
     public Ejecucion()
     {
@@ -13,14 +14,11 @@ public class Ejecucion {
         //variables.put("$fib1", BigInteger.valueOf(1));
         //variables.put("$fib2", BigInteger.valueOf(1));
 
-        ejecutar("$d1 = 1 + ( 8 / 2 * 7 );");
+        ejecutar("$d1 = 1000 + (354 * ( 2 * 355 ) ) + 1;");
 
         //ejecutar("write $n + 1;");
 
         //ejecutar("$n = $fib1 + $fib2;");
-
-        //System.out.println(infixToPostfix("( 1000 + (354 * ( 2 * 355 ) ) + 1"));
-        //System.out.println(infixToPostfix("( 1 + 3 * ( 2 * 3 ) ) + 1"));
     }
 
 
@@ -50,24 +48,25 @@ public class Ejecucion {
 
             op2 = op2+" "+terminos[i];
         }
+
         System.out.println("Fin: "+op2);
 
-        //String o = infixToPostfix("(1000 + (354 * ( 2 * 355 ) ) + 1");
-        String o = infixToPostfix(op2);
-        //operacion = opPrueba.replace(" ", "");
-        //System.out.println(o);
+        op2 = op2.replace(" ", "");
+
+        String o = postfijo.InfijaAPostfija(op2);
+
+        System.out.println("postfix: "+ o);
 
         Stack<Integer> stack = new Stack<>();
 
         int i;
-
-        for(i=0; i < o.length(); i++)
+        for(i = 0; i < o.length(); i++)
         {
             char c = o.charAt(i);
 
             if(c == ' ')
             {
-
+                //Borrar
             }
             else if(Character.isDigit(c))
             {
@@ -75,7 +74,7 @@ public class Ejecucion {
 
                 while(Character.isDigit(c))
                 {
-                    n = n*10 + (int)(c-'0');
+                    n = n*10 + (int)(c -'0');
                     i++;
                     c = o.charAt(i);
                 }
@@ -110,7 +109,6 @@ public class Ejecucion {
             }
         }
         //System.out.println("R:" +stack.pop());
-
         return BigInteger.valueOf(stack.pop());
     }
 
@@ -165,25 +163,6 @@ public class Ejecucion {
         else{
             variables.put(str[1], n);
         }
-
-        /*
-        while (it.hasNext())
-        {
-            Map.Entry pair = (Map.Entry) it.next();
-
-            if(pair.getKey().equals(str[1]))
-            {
-                System.out.println("Antes: "+pair.getKey() + " = " + pair.getValue());
-                pair.setValue(n);
-                System.out.println("Dps: "+pair.getKey() + " = " + pair.getValue());
-            }
-        }*/
-        /*
-        if(loEncontro == false){
-            //Aqui se le agrega como value el resultado del calcular
-            variables.put(str[1], n);
-            System.out.println("put NUEVO: "+str[1]+" "+n);
-        }*/
     }
 
     public void write(String sublinea)
@@ -301,10 +280,7 @@ public class Ejecucion {
         }
     }
 
-
-
     public String verificarVariable(String s) {
-
 
         for (int i = 0; i < s.length(); i++) {
             if (s.charAt(i) == '$') {
@@ -335,63 +311,6 @@ public class Ejecucion {
                  */
             }
         }
-
         return s;
-    }
-
-    public String infixToPostfix(String expression) {
-        Stack<Character> stack = new Stack<Character>();
-        String postfixString = "";
-
-        for (int index = 0; index < expression.length(); ++index) {
-            char value = expression.charAt(index);
-            if (value == '(') {
-                stack.push('('); // Code Added
-            } else if (value == ')') {
-                Character oper = stack.peek();
-
-                while (!(oper.equals('(')) && !(stack.isEmpty())) {
-                    stack.pop();
-                    postfixString += oper.charValue();
-                    if (!stack.isEmpty()) // Code Added
-                        oper = stack.peek(); // Code Added
-                }
-                stack.pop(); // Code Added
-            } else if (value == '+' || value == '-') {
-                if (stack.isEmpty()) {
-                    stack.push(value);
-                } else {
-                    Character oper = stack.peek();
-                    while (!(stack.isEmpty() || oper.equals(('(')) || oper.equals((')')))) {
-                        oper = stack.pop(); // Code Updated
-                        postfixString += oper.charValue();
-                    }
-                    stack.push(value);
-                }
-            } else if (value == '*' || value == '/') {
-                if (stack.isEmpty()) {
-                    stack.push(value);
-                } else {
-                    Character oper = stack.peek();
-                    // while condition updated
-                    while (!oper.equals(('(')) && !oper.equals(('+')) && !oper.equals(('-')) && !stack.isEmpty()) {
-                        oper = stack.pop(); // Code Updated
-                        postfixString += oper.charValue();
-                    }
-                    stack.push(value);
-                }
-            } else {
-                postfixString += value;
-            }
-        }
-
-        while (!stack.isEmpty()) {
-            Character oper = stack.peek();
-            if (!oper.equals(('('))) {
-                stack.pop();
-                postfixString += oper.charValue();
-            }
-        }
-        return postfixString;
     }
 }

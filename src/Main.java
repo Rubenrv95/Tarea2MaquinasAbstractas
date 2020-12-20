@@ -6,6 +6,7 @@ public class Main {
     private static Stack<String> pila;
 
     public static void main(String[] args){
+        /*
         pila = new Stack<>();
         Scanner entrada = new Scanner(System.in);
         
@@ -19,7 +20,11 @@ public class Main {
 
         Parser p = new Parser(pila);
         p.parseCodigo();
-        p.ejecutar();
+        p.ejecutar();*/
+
+        Ejecucion e = new Ejecucion();
+        //e.ejecutar();
+
         // String op = "1 + $pinky * $z";
         // //p.parseOperacion(op);
         //p.parseCondicion("$d1 + ( 3 * 8 + ( 5 - 2 ) ) != $d2");
