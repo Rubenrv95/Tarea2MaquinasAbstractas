@@ -1,27 +1,39 @@
+import java.util.Collections;
 import java.util.Stack;
 
 
 public class Parser {
     private Stack<String> pila;
+    private Stack<String> pilaEjecucion;
     private Ejecucion ejecucion;
-    private int largoInicial;
 
     public Parser(Stack<String> pila){
         this.pila = pila;   
+        this.pilaEjecucion = new Stack<>();
         this.ejecucion = new Ejecucion();
-        this.largoInicial = this.pila.size();
+    }
+
+    public void ejecutar(){
+        Collections.reverse(this.pilaEjecucion);
+        while(!this.pilaEjecucion.empty()){
+
+            String x = this.pilaEjecucion.peek();
+            System.out.println(x);
+            this.pilaEjecucion.pop();
+        }
     }
 
     public boolean parseCodigo(){
         if(pila.size() != 0){
             String linea = pila.peek();
             if(!parseInstruccion(linea)){
-                System.out.println("Error al Parsear en la linea "+(this.largoInicial+1- this.pila.size()) );
+                System.out.println("fallo");
                 return false;
             }
-            pila.pop();
-            parseCodigo();
+            this.pila.pop();
+            // parseCodigo();
         }
+        System.out.println("exito");
         return true;
     }
 
@@ -71,24 +83,31 @@ public class Parser {
                         return false;
                     }
                     else{
-                        Stack<String> ins = new Stack<>();
-                        ins.push(linea);
-                        this.pila.pop();
-                        while(!pila.empty()){
-                            if(pila.peek().equals("endif;")){
+                        this.pilaEjecucion.push(linea);
+                        this.pila.pop();                   
+                        String aux = this.pila.peek();
+                        aux = aux.replace("\t","");
+                        boolean hayElse = false;
+                        while(!this.pila.empty()){
+                            if(aux.equals("endif;")){
+                                this.pilaEjecucion.push(aux);
                                 return true;
                             }
-                            else if( pila.peek().equals("else")){
-                                ins.push(pila.peek());
-                                this.pila.pop();
+                            else if ( aux.equals("else") && !hayElse){
+                                hayElse = true;
+                            }
+                            else if(this.parseInstruccion(aux)){
+                                if(!aux.startsWith("if") && !aux.startsWith("while")){
+                                    this.pilaEjecucion.push(aux);
+                                }
                             }
                             else{
-                                if(!parseInstruccion(pila.peek())){
-                                    System.out.println("Error al Parsear en la linea "+(this.largoInicial+1- this.pila.size()) );
-                                    return false;
-                                }
-                                ins.push(pila.peek());
-                                this.pila.pop();
+                                return false;
+                            }
+                            this.pila.pop();
+                            if(!this.pila.empty()){
+                                aux = this.pila.peek();
+                                aux = aux.replace("\t","");
                             }
                         }
                         return false;
@@ -119,20 +138,27 @@ public class Parser {
                         return false;
                     }
                     else{
-                        Stack<String> ins = new Stack<>();
-                        ins.push(linea);
-                        this.pila.pop();
-                        while(!pila.empty()){
-                            if(pila.peek().equals("wend;")){
+                        this.pilaEjecucion.push(linea);
+                        this.pila.pop();                   
+                        String aux = this.pila.peek();
+                        aux = aux.replace("\t","");
+                        while(!this.pila.empty()){
+                            if(aux.equals("wend;")){
+                                this.pilaEjecucion.push(aux);
                                 return true;
                             }
-                            else{
-                                if(!parseInstruccion(pila.peek())){
-                                    System.out.println("Error al Parsear en la linea "+(this.largoInicial+1- this.pila.size()) );
-                                    return false;
+                            else if(this.parseInstruccion(aux)){
+                                if(!aux.startsWith("while") && !aux.startsWith("if")){
+                                    this.pilaEjecucion.push(aux);
                                 }
-                                ins.push(pila.peek());
-                                this.pila.pop();
+                            }
+                            else{
+                                return false;
+                            }
+                            this.pila.pop();
+                            if(!this.pila.empty()){
+                                aux = this.pila.peek();
+                                aux = aux.replace("\t","");
                             }
                         }
                         return false;
@@ -152,7 +178,7 @@ public class Parser {
     public boolean parseInicializacion(String linea){
         if( linea.endsWith(";")){
             if(linea.startsWith("$")){
-                String linea2 = linea.substring(1,linea.length());
+                String linea2 = linea.substring(1,linea.length()-1);
                 String[] caracteres = linea2.split("");
                 String nombre = "";
                 for(int i = 0; i < caracteres.length ; i++){
@@ -163,26 +189,31 @@ public class Parser {
                         if( caracteres[i+1].equals("=")){
                             String aux = linea.substring(i+4,linea.length()-1);
                             if(!parseValor(aux)){
+                                System.out.println("owo");
                                 return false;
                             }
                         }
                         else{
+                            System.out.println("uwu");
                             return false;
                         }
-                        this.ejecucion.ejecutar(linea);
+                        //this.ejecucion.ejecutar(linea);
                         return true;
                     }
                     else{
+                        System.out.println("aca entonces?");
                         return false;
                     }
                 }
             }
             else{
+                System.out.println("xd");
                 return false;
             }
             
         }
         else{
+            System.out.println("dx");
             return false;
         }
         return true;
@@ -204,7 +235,7 @@ public class Parser {
         else{
             return false;
         }
-        this.ejecucion.ejecutar(linea);
+        //this.ejecucion.ejecutar(linea);
         return true;
     }
 
@@ -225,7 +256,7 @@ public class Parser {
         else{
             return false;
         }
-        this.ejecucion.ejecutar(linea);
+        //this.ejecucion.ejecutar(linea);
         return true;
     }
 
