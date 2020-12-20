@@ -13,7 +13,7 @@ public class Ejecucion {
         //variables.put("$fib1", BigInteger.valueOf(1));
         //variables.put("$fib2", BigInteger.valueOf(1));
 
-        //ejecutar("read $n;");
+        ejecutar("$d1 = 1 + ( 8 / 2 * 7 );");
 
         //ejecutar("write $n + 1;");
 
@@ -189,7 +189,7 @@ public class Ejecucion {
     public void write(String sublinea)
     {
         String str = sublinea.substring(6, sublinea.length()-1); //le quito el write y el ;
-        System.out.println(str);
+        //System.out.println(str);
         String var = null;
         boolean esOperacion = false;
         if(str.startsWith("$")){
@@ -265,13 +265,14 @@ public class Ejecucion {
             }
             if(esValido)
             {
-                Iterator it = variables.entrySet().iterator();
-
                 BigInteger valor;
                 if(!variables.containsKey(var)){
                     variables.put(var, BigInteger.valueOf(1));
-                    System.out.println("ERROR: La variable "+var+" no se encuentra inicializada");
+                    //System.out.println("ERROR: La variable "+var+" no se encuentra inicializada");
                 }
+
+                Iterator it = variables.entrySet().iterator();
+
                 while (it.hasNext())
                 {
                     Map.Entry pair = (Map.Entry) it.next();
@@ -279,15 +280,21 @@ public class Ejecucion {
                     if(pair.getKey().equals(var))
                     {
                         valor = (BigInteger) (pair.getValue());
-                        String operacion = linea.substring(i+1, linea.length()-1);
+                        String operacion = linea.substring(i+2, linea.length()-1);
 
-                        System.out.println("op:"+ operacion);
-                        BigInteger resultado = calcular(operacion);
-                        System.out.println("Resultado: "+resultado);
-                        System.out.println("Antes: "+pair.getKey() + " = " + pair.getValue());
-                        variables.replace(var, resultado);
-                        System.out.println("Despues: "+pair.getKey() + " = " + pair.getValue());
-                        //Calcular y reemplazar
+                        if(operacion.contains(" ")){
+                            System.out.println("op:"+ operacion);
+                            BigInteger resultado = calcular(operacion);
+                            System.out.println("Resultado: "+resultado);
+                            System.out.println("Antes: "+pair.getKey() + " = " + pair.getValue());
+                            variables.replace(var, resultado);
+                            System.out.println("Despues: "+pair.getKey() + " = " + pair.getValue());
+                            //Calcular y reemplazar
+                        }
+                        else{
+                            variables.replace(var, BigInteger.valueOf(Integer.parseInt(operacion)));
+                            System.out.println(variables.get(var));
+                        }
                     }
                 }
             }
