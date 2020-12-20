@@ -165,7 +165,7 @@ public class Ejecucion {
         if(str.startsWith("$")){
             if(!str.contains(" ")){
                 if(this.variables.containsKey(str)){
-                    System.out.println(this.variables.get(str));
+                    //System.out.println(this.variables.get(str));
                 }
             }
             else{
@@ -198,6 +198,7 @@ public class Ejecucion {
                             loEncontro = true;
                             BigInteger resultado = calcular(operacion);
                             variables.replace(var, resultado);
+                            System.out.println("Despues: "+pair.getKey() + " = " + pair.getValue());
                             //Calcular y reemplazar
                         }
                     }
