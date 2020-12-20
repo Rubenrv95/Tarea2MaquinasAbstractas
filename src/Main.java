@@ -16,19 +16,10 @@ public class Main {
             linea = entrada.nextLine();
         }
         Collections.reverse(pila);
-        
-
-        Ejecucion e = new Ejecucion();
         Parser p = new Parser(pila);
         if(p.parseCodigo()){
             p.ejecutar(p.getPilaTermino());
         }
-        
-        // String op = "1 + $pinky * $z";
-        // //p.parseOperacion(op);
-        //p.parseCondicion("$d1 + ( 3 * 8 + ( 5 - 2 ) ) != $d2");
-
-        //e.verificarVariable(op);
     }
 
     //para ejecutar: cmd /c 'java -jar T2MALF.jar < ejemplo.txt'

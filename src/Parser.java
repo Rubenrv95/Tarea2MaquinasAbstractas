@@ -14,6 +14,7 @@ public class Parser {
     }
 
     public void ejecutar( Stack<String> pilaEjecucion){
+        System.out.println("----- Comienza Ejecucion -----");
         while(!pilaEjecucion.empty()){
             
             String linea = pilaEjecucion.peek();
@@ -85,6 +86,7 @@ public class Parser {
                 }
             }
         }
+        System.out.println("----- Termina Ejecucion -----");
     }
 
     public boolean parseCodigo(){
@@ -96,7 +98,7 @@ public class Parser {
             }
             this.pila.pop();
         }
-        System.out.println("Se ejecuto el programa con exito");
+        System.out.println("Se parseo el codigo con Exito");
         Collections.reverse(this.pilaTermino);
         return true;
     }
