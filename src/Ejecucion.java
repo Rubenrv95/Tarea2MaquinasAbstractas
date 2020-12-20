@@ -24,7 +24,6 @@ public class Ejecucion {
 
     public BigInteger calcular (String operacion)
     {
-        System.out.println(operacion);
         // primero hay que reemplazar todas las $ por su valor, si no se encuentra.. ERROR
         String[] terminos = operacion.split(" ");
         BigInteger rFinal = null;
@@ -34,7 +33,6 @@ public class Ejecucion {
                 BigInteger r = obtenerValor(terminos[i]);
                 if(r != null){
                     terminos[i] = String.valueOf(r);
-                    System.out.println("r: "+r);
                 }
                 else{
                     break;
@@ -49,13 +47,10 @@ public class Ejecucion {
             op2 = op2+" "+terminos[i];
         }
 
-        System.out.println("Fin: "+op2);
 
         op2 = op2.replace(" ", "");
 
         String o = postfijo.InfijaAPostfija(op2);
-
-        System.out.println("postfix: "+ o);
 
         Stack<Integer> stack = new Stack<>();
 
@@ -117,7 +112,6 @@ public class Ejecucion {
         if (variables.containsKey(key)) {
             return variables.get(key);
         }
-        System.out.println("ERROR: la variable "+key+" no esta inicializada");
         return null;
     }
 
@@ -151,13 +145,11 @@ public class Ejecucion {
                 n = this.scanner.nextBigInteger();
                 errorBigInt = false;
             }catch(InputMismatchException e){
-                System.out.println("Error BigInt: debe ingresar un valor valido");
                 this.scanner.next();
             }
         }
         if(variables.containsKey(str[1]))
         {
-            System.out.println("true");
             variables.replace(str[1], n);
         }
         else{
@@ -168,16 +160,12 @@ public class Ejecucion {
     public void write(String sublinea)
     {
         String str = sublinea.substring(6, sublinea.length()-1); //le quito el write y el ;
-        System.out.println(str);
         String var = null;
         boolean esOperacion = false;
         if(str.startsWith("$")){
             if(!str.contains(" ")){
                 if(this.variables.containsKey(str)){
                     System.out.println(this.variables.get(str));
-                }
-                else{
-                    System.out.println("ERROR: La variable "+var+" no se encuentra inicializada");
                 }
             }
             else{
@@ -187,7 +175,6 @@ public class Ejecucion {
                     if(str.charAt(i) == ' '){
                         //Obtiene el string de la operacion
                         var = str.substring(0, i);
-                        System.out.println(var);
                         esOperacion = true;
                         break;
                     }
@@ -208,19 +195,16 @@ public class Ejecucion {
                             valor = (BigInteger) (pair.getValue());
                             String operacion = str.substring(i+1, str.length());
                             operacion = valor +" "+ operacion;
-                            System.out.println(operacion);
                             loEncontro = true;
                             BigInteger resultado = calcular(operacion);
-                            System.out.println("Resultado: "+operacion);
-                            System.out.println("Antes: "+pair.getKey() + " = " + pair.getValue());
                             variables.replace(var, resultado);
-                            System.out.println("Despues: "+pair.getKey() + " = " + pair.getValue());
                             //Calcular y reemplazar
                         }
                     }
+                    /*
                     if(!loEncontro){
                         System.out.println("ERROR: La variable "+var+" no se encuentra inicializada");
-                    }
+                    }*/
                 }
             }
         }
@@ -228,7 +212,6 @@ public class Ejecucion {
 
     public void init(String linea)
     {
-        System.out.println(linea);
         String var = null;
         boolean esValido = false;
 
@@ -237,7 +220,6 @@ public class Ejecucion {
             for(i = 0; i < linea.length(); i++){
                 if(linea.charAt(i) == '='){
                     var = linea.substring(0, i-1);
-                    System.out.println(var);
                     esValido = true;
                     break;
                 }
@@ -249,7 +231,6 @@ public class Ejecucion {
                 BigInteger valor;
                 if(!variables.containsKey(var)){
                     variables.put(var, BigInteger.valueOf(1));
-                    System.out.println("ERROR: La variable "+var+" no se encuentra inicializada");
                 }
                 while (it.hasNext())
                 {
@@ -260,55 +241,13 @@ public class Ejecucion {
                         valor = (BigInteger) (pair.getValue());
                         String operacion = linea.substring(i+1, linea.length()-1);
 
-                        System.out.println("op:"+ operacion);
                         BigInteger resultado = calcular(operacion);
-                        System.out.println("Resultado: "+resultado);
-                        System.out.println("Antes: "+pair.getKey() + " = " + pair.getValue());
                         variables.replace(var, resultado);
-                        System.out.println("Despues: "+pair.getKey() + " = " + pair.getValue());
                         //Calcular y reemplazar
                     }
                 }
             }
         }
-    }
-
-
-
-    public String verificarVariable(String s) {
-
-
-        for (int i = 0; i < s.length(); i++) {
-            if (s.charAt(i) == '$') {
-                String var = "";
-                int y = i;
-                while (s.charAt(y)!=' ') {
-                    if (y==s.length()-1) {
-                        var = var + s.charAt(y);
-                        break;
-                    }
-                    var = var + s.charAt(y);
-                    y++;
-                }
-                i= y;
-
-                System.out.println(var);
-
-                s = s.replaceAll(var, "pene"); //se reemplazan la variable por su valor en el string
-
-                System.out.println(s);
-                /*
-                String valor_variable = (String) h.get(var); //obtenemos el valor de la variable del hash
-
-                s = s.replaceAll(var, valor_variable); //se reemplazan la variable por su valor en el string
-
-                i=0;
-
-                 */
-            }
-        }
-
-        return s;
     }
 
     public String infixToPostfix(String expression) {
@@ -369,7 +308,6 @@ public class Ejecucion {
 
     public boolean verificarCondicion(String s) {
 
-        System.out.println(s);
 
         //Quitamos los parentesis de la condicion
         s = s.substring(1, s.length() -1);
@@ -400,62 +338,48 @@ public class Ejecucion {
         switch (condicional) {
             case "<":
                 if (x.compareTo(y) == -1) {
-                    System.out.println("Es cierta la condicion");
                     return true;
                 }
                 else {
-                    System.out.println("Es falsa la condicion");
                     return false;
                 }
             case ">":
                 if (x.compareTo(y) == 1) {
-                    System.out.println("Es cierta la condicion");
                     return true;
                 }
                 else {
-                    System.out.println("Es falsa la condicion");
                     return false;
                 }
             case "<=":
                 if (x.compareTo(y) == -1 || x.compareTo(y) == 0) {
-                    System.out.println("Es cierta la condicion. ");
                     return true;
                 }
                 else {
-                    System.out.println("Es falsa la condicion");
                     return false;
                 }
             case ">=":
                 if (x.compareTo(y) == 1 || x.compareTo(y) == 0) {
-                    System.out.println("Es cierta la condicion");
                     return true;
                 }
                 else {
-                    System.out.println("Es falsa la condicion");
                     return false;
                 }
             case "!=":
                 if (x != y) {
-                    System.out.println("Es cierta la condicion");
                     return true;
                 }
                 else {
-                    System.out.println("Es falsa la condicion");
                     return false;
                 }
             case "==":
                 if (x == y) {
-                    System.out.println("Es cierta la condicion");
                     return true;
                 }
                 else {
-                    System.out.println("Es falsa la condicion");
                     return false;
                 }
         }
 
-
-        System.out.println("Error al ingresar la condicional. No coincide");
         return false;
     }
 
@@ -506,7 +430,6 @@ public class Ejecucion {
             }
         }
 
-        System.out.println("Todas las variables son correctas y están almacenadas");
         return true;
     }
 }
