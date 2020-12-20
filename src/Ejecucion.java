@@ -165,7 +165,7 @@ public class Ejecucion {
         if(str.startsWith("$")){
             if(!str.contains(" ")){
                 if(this.variables.containsKey(str)){
-                    System.out.println(this.variables.get(str));
+                    //System.out.println(this.variables.get(str));
                 }
             }
             else{
@@ -198,6 +198,7 @@ public class Ejecucion {
                             loEncontro = true;
                             BigInteger resultado = calcular(operacion);
                             variables.replace(var, resultado);
+                            System.out.println("Despues: "+pair.getKey() + " = " + pair.getValue());
                             //Calcular y reemplazar
                         }
                     }
@@ -248,62 +249,6 @@ public class Ejecucion {
                 }
             }
         }
-    }
-
-    public String infixToPostfix(String expression) {
-        Stack<Character> stack = new Stack<Character>();
-        String postfixString = "";
-
-        for (int index = 0; index < expression.length(); ++index) {
-            char value = expression.charAt(index);
-            if (value == '(') {
-                stack.push('('); // Code Added
-            } else if (value == ')') {
-                Character oper = stack.peek();
-
-                while (!(oper.equals('(')) && !(stack.isEmpty())) {
-                    stack.pop();
-                    postfixString += oper.charValue();
-                    if (!stack.isEmpty()) // Code Added
-                        oper = stack.peek(); // Code Added
-                }
-                stack.pop(); // Code Added
-            } else if (value == '+' || value == '-') {
-                if (stack.isEmpty()) {
-                    stack.push(value);
-                } else {
-                    Character oper = stack.peek();
-                    while (!(stack.isEmpty() || oper.equals(('(')) || oper.equals((')')))) {
-                        oper = stack.pop(); // Code Updated
-                        postfixString += oper.charValue();
-                    }
-                    stack.push(value);
-                }
-            } else if (value == '*' || value == '/') {
-                if (stack.isEmpty()) {
-                    stack.push(value);
-                } else {
-                    Character oper = stack.peek();
-                    // while condition updated
-                    while (!oper.equals(('(')) && !oper.equals(('+')) && !oper.equals(('-')) && !stack.isEmpty()) {
-                        oper = stack.pop(); // Code Updated
-                        postfixString += oper.charValue();
-                    }
-                    stack.push(value);
-                }
-            } else {
-                postfixString += value;
-            }
-        }
-
-        while (!stack.isEmpty()) {
-            Character oper = stack.peek();
-            if (!oper.equals(('('))) {
-                stack.pop();
-                postfixString += oper.charValue();
-            }
-        }
-        return postfixString;
     }
 
     public boolean verificarCondicion(String s) {
