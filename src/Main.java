@@ -18,6 +18,7 @@ public class Main {
         Collections.reverse(pila);
         
 
+        Ejecucion e = new Ejecucion();
         Parser p = new Parser(pila);
         p.parseCodigo();
         p.ejecutar();*/
@@ -30,6 +31,7 @@ public class Main {
         //p.parseCondicion("$d1 + ( 3 * 8 + ( 5 - 2 ) ) != $d2");
 
         //e.verificarVariable(op);
+        e.verificarCondicion("( 6 + 2 == 4 + 4 )");
 
     }
 
