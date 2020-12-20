@@ -4,22 +4,84 @@ import java.util.Stack;
 
 public class Parser {
     private Stack<String> pila;
-    private Stack<String> pilaEjecucion;
+    private Stack<String> pilaTermino;
     private Ejecucion ejecucion;
 
     public Parser(Stack<String> pila){
         this.pila = pila;   
-        this.pilaEjecucion = new Stack<>();
+        this.pilaTermino = new Stack<>();
         this.ejecucion = new Ejecucion();
     }
 
-    public void ejecutar(){
-        Collections.reverse(this.pilaEjecucion);
-        while(!this.pilaEjecucion.empty()){
+    public void ejecutar( Stack<String> pilaEjecucion){
+        while(!pilaEjecucion.empty()){
+            String linea = pilaEjecucion.peek();
+            if( linea.startsWith("$") || linea.startsWith("write") || linea.startsWith("read") ){
+                this.ejecucion.ejecutar(linea);
+                pilaEjecucion.pop();
+            }
+            else if ( linea.startsWith("if")){
+                String inicio = this.pila.peek();
+                this.pila.pop();
+                boolean ifStat = true;
+                boolean elseStat = false;
+                int ifCount = 1;
+                Stack<String> ifIns = new Stack<>();
+                Stack<String> elseIns = new Stack<>();
 
-            String x = this.pilaEjecucion.peek();
-            System.out.println(x);
-            this.pilaEjecucion.pop();
+                String instruccion = this.pila.peek();
+                while(!instruccion.equals("endif;") && ifCount != 0){
+                    if(instruccion.equals("else")){
+                        elseStat = true;
+                        ifStat = false;
+                    }
+                    if(ifStat){
+                        ifIns.push(instruccion);
+                    }
+                    else if (elseStat){
+                        elseIns.push(instruccion);
+                    }
+                    pilaEjecucion.pop();
+                    instruccion = pilaEjecucion.peek();
+                    if(instruccion.equals("endif;")){
+                        ifCount--;
+                    }
+                    else if ( instruccion.startsWith("if")){
+                        ifCount++;
+                    }
+                }
+                pilaEjecucion.pop();
+                
+                String condicion = inicio.substring(3,inicio.length()-5);
+                if(this.ejecucion.comprobarVariable(condicion)){
+                    if(this.ejecucion.verificarCondicion(condicion)){
+                        this.ejecutar(ifIns);
+                    }
+                    else{
+                        this.ejecutar(elseIns);
+                    }
+                }
+            }
+            else if( linea.startsWith("while")){
+                String inicio = pilaEjecucion.peek();
+                pilaEjecucion.pop();
+                Stack<String> instrucciones = new Stack<>();
+                String instruccion = pilaEjecucion.peek();
+                while(!instruccion.equals("wend;")){
+                    instrucciones.push(instruccion);
+                    pilaEjecucion.pop();
+                    instruccion = pilaEjecucion.peek();
+                }
+                pilaEjecucion.pop();
+
+                String condicion = inicio.substring(6, inicio.length()-3);
+
+                if(this.ejecucion.comprobarVariable(condicion)){
+                    while(this.ejecucion.verificarCondicion(condicion)){
+                        this.ejecutar(instrucciones);
+                    }
+                }
+            }
         }
     }
 
@@ -83,14 +145,14 @@ public class Parser {
                         return false;
                     }
                     else{
-                        this.pilaEjecucion.push(linea);
+                        this.pilaTermino.push(linea);
                         this.pila.pop();                   
                         String aux = this.pila.peek();
                         aux = aux.replace("\t","");
                         boolean hayElse = false;
                         while(!this.pila.empty()){
                             if(aux.equals("endif;")){
-                                this.pilaEjecucion.push(aux);
+                                this.pilaTermino.push(aux);
                                 return true;
                             }
                             else if ( aux.equals("else") && !hayElse){
@@ -98,7 +160,7 @@ public class Parser {
                             }
                             else if(this.parseInstruccion(aux)){
                                 if(!aux.startsWith("if") && !aux.startsWith("while")){
-                                    this.pilaEjecucion.push(aux);
+                                    this.pilaTermino.push(aux);
                                 }
                             }
                             else{
@@ -138,18 +200,18 @@ public class Parser {
                         return false;
                     }
                     else{
-                        this.pilaEjecucion.push(linea);
+                        this.pilaTermino.push(linea);
                         this.pila.pop();                   
                         String aux = this.pila.peek();
                         aux = aux.replace("\t","");
                         while(!this.pila.empty()){
                             if(aux.equals("wend;")){
-                                this.pilaEjecucion.push(aux);
+                                this.pilaTermino.push(aux);
                                 return true;
                             }
                             else if(this.parseInstruccion(aux)){
                                 if(!aux.startsWith("while") && !aux.startsWith("if")){
-                                    this.pilaEjecucion.push(aux);
+                                    this.pilaTermino.push(aux);
                                 }
                             }
                             else{
@@ -609,4 +671,11 @@ public class Parser {
         }
     }
 
+    public Stack<String> getPilaTermino() {
+        return pilaTermino;
+    }
+
+    public void setPilaTermino(Stack<String> pilaTermino) {
+        this.pilaTermino = pilaTermino;
+    }
 }
