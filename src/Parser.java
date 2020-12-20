@@ -14,23 +14,28 @@ public class Parser {
     }
 
     public void ejecutar( Stack<String> pilaEjecucion){
+        System.out.println(pilaEjecucion.size());
         while(!pilaEjecucion.empty()){
+            
             String linea = pilaEjecucion.peek();
+            System.out.println(linea);
             if( linea.startsWith("$") || linea.startsWith("write") || linea.startsWith("read") ){
                 this.ejecucion.ejecutar(linea);
+                System.out.println("Hola");
                 pilaEjecucion.pop();
             }
-            else if ( linea.startsWith("if")){
-                String inicio = this.pila.peek();
-                this.pila.pop();
+            else if (linea.startsWith("if")){
+                String inicio = pilaEjecucion.peek();
+                pilaEjecucion.pop();
                 boolean ifStat = true;
                 boolean elseStat = false;
                 int ifCount = 1;
                 Stack<String> ifIns = new Stack<>();
                 Stack<String> elseIns = new Stack<>();
-
-                String instruccion = this.pila.peek();
-                while(!instruccion.equals("endif;") && ifCount != 0){
+                System.out.println("alo?");
+                String instruccion = pilaEjecucion.peek();
+                while(ifCount != 0){
+                    System.out.println("xd");
                     if(instruccion.equals("else")){
                         elseStat = true;
                         ifStat = false;
@@ -50,10 +55,13 @@ public class Parser {
                         ifCount++;
                     }
                 }
+                Collections.reverse(ifIns);
+                Collections.reverse(elseIns);
+                System.out.println("lo borra"+pilaEjecucion.peek());
                 pilaEjecucion.pop();
                 
                 String condicion = inicio.substring(3,inicio.length()-5);
-                if(this.ejecucion.comprobarVariable(condicion)){
+                if(this.ejecucion.comprobarVariables(condicion)){
                     if(this.ejecucion.verificarCondicion(condicion)){
                         this.ejecutar(ifIns);
                     }
@@ -75,8 +83,8 @@ public class Parser {
                 pilaEjecucion.pop();
 
                 String condicion = inicio.substring(6, inicio.length()-3);
-
-                if(this.ejecucion.comprobarVariable(condicion)){
+                Collections.reverse(instrucciones);
+                if(this.ejecucion.comprobarVariables(condicion)){
                     while(this.ejecucion.verificarCondicion(condicion)){
                         this.ejecutar(instrucciones);
                     }
@@ -96,6 +104,7 @@ public class Parser {
             // parseCodigo();
         }
         System.out.println("exito");
+        Collections.reverse(this.pilaTermino);
         return true;
     }
 
@@ -156,6 +165,7 @@ public class Parser {
                                 return true;
                             }
                             else if ( aux.equals("else") && !hayElse){
+                                this.pilaTermino.push(aux);
                                 hayElse = true;
                             }
                             else if(this.parseInstruccion(aux)){

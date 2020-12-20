@@ -28,7 +28,6 @@ public class Main {
         //p.parseCondicion("$d1 + ( 3 * 8 + ( 5 - 2 ) ) != $d2");
 
         //e.verificarVariable(op);
-        entrada.close();
     }
 
     //para ejecutar: cmd /c 'java -jar T2MALF.jar < ejemplo.txt'
