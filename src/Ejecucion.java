@@ -198,7 +198,7 @@ public class Ejecucion {
                             loEncontro = true;
                             BigInteger resultado = calcular(operacion);
                             variables.replace(var, resultado);
-                            System.out.println("Despues: "+pair.getKey() + " = " + pair.getValue());
+                            System.out.println(pair.getValue());
                             //Calcular y reemplazar
                         }
                     }
@@ -280,6 +280,7 @@ public class Ejecucion {
         BigInteger x = this.calcular(parte1);
         BigInteger y = this.calcular(parte2);
 
+        System.out.println(x);
         switch (condicional) {
             case "<":
                 if (x.compareTo(y) == -1) {
@@ -289,10 +290,13 @@ public class Ejecucion {
                     return false;
                 }
             case ">":
+                
                 if (x.compareTo(y) == 1) {
+                    System.out.println("hola");
                     return true;
                 }
                 else {
+                    System.out.println("chao");
                     return false;
                 }
             case "<=":
@@ -323,9 +327,9 @@ public class Ejecucion {
                 else {
                     return false;
                 }
+            default:
+                return false;
         }
-
-        return false;
     }
 
     public boolean comprobarVariables(String s) {
