@@ -50,7 +50,7 @@ public class Ejecucion {
 
         String o = postfijo.InfijaAPostfija(op2);
 
-        Stack<Integer> stack = new Stack<>();
+        Stack<BigInteger> stack = new Stack<>();
 
         int i;
         for(i = 0; i < o.length(); i++)
@@ -63,11 +63,11 @@ public class Ejecucion {
             }
             else if(Character.isDigit(c))
             {
-                int n = 0;
+                BigInteger n = BigInteger.valueOf(0);
 
                 while(Character.isDigit(c))
                 {
-                    n = n*10 + (int)(c -'0');
+                    n = n.multiply(BigInteger.valueOf(10)).add(BigInteger.valueOf((c -'0')));
                     i++;
                     c = o.charAt(i);
                 }
@@ -77,35 +77,35 @@ public class Ejecucion {
             else
             {
                 if(stack.size()>1){
-                    int val1 = stack.pop();
-                    int val2 = stack.pop();
+                    BigInteger val1 = stack.pop();
+                    BigInteger val2 = stack.pop();
 
                     switch(c)
                     {
                         case '+':
-                            stack.push(val2+val1);
+                            stack.push(val2.add(val1));
                             break;
 
                         case '-':
-                            stack.push(val2- val1);
+                            stack.push(val2.subtract(val1));
                             break;
 
                         case '/':
-                            stack.push(val2/val1);
+                            stack.push(val2.divide(val1));
                             break;
 
                         case '*':
-                            stack.push(val2*val1);
+                            stack.push(val2.multiply(val1));
                             break;
                         case '%':
-                            stack.push(val2%val1);
+                            stack.push(val2.mod(val1));
                             break;
                     }
                 }
             }
         }
         //System.out.println("R:" +stack.pop());
-        return BigInteger.valueOf(stack.pop());
+        return stack.pop();
     }
 
     public BigInteger obtenerValor(String key){
