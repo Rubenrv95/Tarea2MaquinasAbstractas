@@ -14,7 +14,7 @@ public class Ejecucion {
         //variables.put("$fib1", BigInteger.valueOf(1));
         //variables.put("$fib2", BigInteger.valueOf(1));
 
-        ejecutar("$d1 = 1000 + (354 * ( 2 * 355 ) ) + 1;");
+        ejecutar("$d1 = 1000 + (354 * ( 2 * 355 )) + 1;");
 
         //ejecutar("write $n + 1;");
 
@@ -40,13 +40,11 @@ public class Ejecucion {
             }
         }
 
-
         String op2 = "";
         for(int i = 0; i < terminos.length; i++){
 
             op2 = op2+" "+terminos[i];
         }
-
 
         op2 = op2.replace(" ", "");
 
@@ -98,6 +96,9 @@ public class Ejecucion {
 
                         case '*':
                             stack.push(val2*val1);
+                            break;
+                        case '%':
+                            stack.push(val2%val1);
                             break;
                     }
                 }
@@ -215,7 +216,6 @@ public class Ejecucion {
     {
         String var = null;
         boolean esValido = false;
-
         if(linea.startsWith("$")){
             int i;
             for(i = 0; i < linea.length(); i++){
@@ -227,12 +227,13 @@ public class Ejecucion {
             }
             if(esValido)
             {
-                Iterator it = variables.entrySet().iterator();
-
                 BigInteger valor;
                 if(!variables.containsKey(var)){
                     variables.put(var, BigInteger.valueOf(1));
                 }
+
+                Iterator it = variables.entrySet().iterator();
+
                 while (it.hasNext())
                 {
                     Map.Entry pair = (Map.Entry) it.next();
