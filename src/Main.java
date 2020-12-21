@@ -25,6 +25,8 @@ public class Main {
             p.ejecutar(p.getPilaTermino());
             System.out.println("termina ejecucion");
         }
+        p.parseOperacion("( 5 + 8 ( 4 - 1 ) - 4 )");
+        p.parseCondicion("( 9 * 8 ) > ( 4 + 2 * ( 2 ) )");
         entrada.close();
     }
 
