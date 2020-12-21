@@ -14,7 +14,7 @@ public class Ejecucion {
         //variables.put("$fib1", BigInteger.valueOf(1));
         //variables.put("$fib2", BigInteger.valueOf(1));
 
-        ejecutar("$d1 = 1000 + (354 * ( 2 * 355 ) ) + 1;");
+        //ejecutar("$d1 = 1000 + (354 * ( 2 * 355 ) ) + 1;");
 
         //ejecutar("write $n + 1;");
 
@@ -165,7 +165,7 @@ public class Ejecucion {
         if(str.startsWith("$")){
             if(!str.contains(" ")){
                 if(this.variables.containsKey(str)){
-                    //System.out.println(this.variables.get(str));
+                    System.out.println(this.variables.get(str));
                 }
             }
             else{
@@ -227,12 +227,12 @@ public class Ejecucion {
             }
             if(esValido)
             {
-                Iterator it = variables.entrySet().iterator();
-
+                
                 BigInteger valor;
                 if(!variables.containsKey(var)){
                     variables.put(var, BigInteger.valueOf(1));
                 }
+                Iterator it = variables.entrySet().iterator();
                 while (it.hasNext())
                 {
                     Map.Entry pair = (Map.Entry) it.next();
@@ -280,7 +280,7 @@ public class Ejecucion {
         BigInteger x = this.calcular(parte1);
         BigInteger y = this.calcular(parte2);
 
-        System.out.println(x);
+        //System.out.println(x);
         switch (condicional) {
             case "<":
                 if (x.compareTo(y) == -1) {
@@ -292,11 +292,9 @@ public class Ejecucion {
             case ">":
                 
                 if (x.compareTo(y) == 1) {
-                    System.out.println("hola");
                     return true;
                 }
                 else {
-                    System.out.println("chao");
                     return false;
                 }
             case "<=":
