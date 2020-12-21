@@ -35,11 +35,13 @@ public class Parser {
                         elseStat = true;
                         ifStat = false;
                     }
-                    if(ifStat){
-                        ifIns.push(instruccion);
-                    }
-                    else if (elseStat){
-                        elseIns.push(instruccion);
+                    else{
+                        if(ifStat){
+                            ifIns.push(instruccion);
+                        }
+                        else if (elseStat){
+                            elseIns.push(instruccion);
+                        }
                     }
                     pilaEjecucion.pop();
                     instruccion = pilaEjecucion.peek();
@@ -49,6 +51,7 @@ public class Parser {
                     else if ( instruccion.startsWith("if")){
                         ifCount++;
                     }
+                    
                 }
                 Collections.reverse(ifIns);
                 Collections.reverse(elseIns);
