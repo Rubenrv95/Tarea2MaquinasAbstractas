@@ -57,6 +57,8 @@ public class Parser {
                 Collections.reverse(elseIns);
                 pilaEjecucion.pop();
                 
+                System.out.println(ifIns);
+                System.out.println(elseIns);
                 String condicion = inicio.substring(3,inicio.length()-5);
                 if(this.ejecucion.comprobarVariables(condicion)){
                     if(this.ejecucion.verificarCondicion(condicion)){
@@ -81,9 +83,12 @@ public class Parser {
 
                 String condicion = inicio.substring(6, inicio.length()-3);
                 Collections.reverse(instrucciones);
+                System.out.println(instrucciones);
                 if(this.ejecucion.comprobarVariables(condicion)){
+                    System.out.println("sale?");
                     while(this.ejecucion.verificarCondicion(condicion)){
-                        this.ejecutar(instrucciones);
+                        Stack<String> aux = (Stack<String>) instrucciones.clone();
+                        this.ejecutar(aux);
                     }
                 }
             }
@@ -410,49 +415,26 @@ public class Parser {
         // }
         for (int i = 0; i < token.length; i++) {
             if (this.parseCondicional(token[i])) {
-                int y = i;
-                String[] aux = new String[y];
-                for (int j = 0; j < y; j++) {
-                    aux[j] = token[j];
+
+                String[] partes = op.split(token[i]);
+                String parte1 = partes[0];
+                String parte2 = partes[1];
+
+                parte1= parte1.substring(0, parte1.length()-1);
+                parte2=parte2.substring(1, parte2.length());
+
+                if (this.parseOperacion(parte1) == true) {
                 }
-                String s = "";
-                for (int j = 0; j < aux.length; j++) {
-                    if (j==0) {
-                        s = s + aux[j];
-                    }
-                    else {
-                        s = s + " " + aux[j];
-                    }
-                }
-                if (this.parseOperacion(s) == true) {
-                }
-                else if (this.parseValor(s) == true) {
+                else if (this.parseValor(parte1) == true) {
                 }
                 else {
                     return false;
                 }
-                y = i+1;
-                String[] aux_2 = new String[token.length-y];
-                int z = 0;
-                for (int j = y; j < token.length; j++) {
-                    if (j==token.length) {
-                        break;
-                    }
-                    aux_2[z] = token[j];
-                    z++;
+
+
+                if (this.parseOperacion(parte2) == true) {
                 }
-                s = "";
-                for (int j = 0; j < aux_2.length; j++) {
-                    if (j==0) {
-                        s = s + aux_2[j];
-                    }
-                    else {
-                        s = s + " " + aux_2[j];
-                    }
-                }
-                if (this.parseOperacion(s) == true) {
-                }
-                else if (this.parseValor(s) == true) {
+                else if (this.parseValor(parte2) == true) {
                 }
                 else {
                     return false;
