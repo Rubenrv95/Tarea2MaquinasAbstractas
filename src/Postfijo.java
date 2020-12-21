@@ -13,7 +13,7 @@ public class Postfijo {
 
     public int getPrecedencia(String s){
         int valor = 3;
-        if(s.equals("*") || s.equals("/")){
+        if(s.equals("*") || s.equals("/") || s.equals("%")){
             valor = 3;
         }
         if(s.equals("+") || s.equals("-")){
