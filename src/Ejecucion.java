@@ -292,11 +292,9 @@ public class Ejecucion {
             case ">":
                 
                 if (x.compareTo(y) == 1) {
-                    System.out.println("hola");
                     return true;
                 }
                 else {
-                    System.out.println("chao");
                     return false;
                 }
             case "<=":
