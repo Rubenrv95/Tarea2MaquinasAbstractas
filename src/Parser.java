@@ -4,36 +4,103 @@ import java.util.Stack;
 
 public class Parser {
     private Stack<String> pila;
-    private Stack<String> pilaEjecucion;
+    private Stack<String> pilaTermino;
     private Ejecucion ejecucion;
 
     public Parser(Stack<String> pila){
         this.pila = pila;   
-        this.pilaEjecucion = new Stack<>();
+        this.pilaTermino = new Stack<>();
         this.ejecucion = new Ejecucion();
     }
 
-    public void ejecutar(){
-        Collections.reverse(this.pilaEjecucion);
-        while(!this.pilaEjecucion.empty()){
+    public void ejecutar( Stack<String> pilaEjecucion){
+        while(!pilaEjecucion.empty()){
+            
+            String linea = pilaEjecucion.peek();
+            if( linea.startsWith("$") || linea.startsWith("write") || linea.startsWith("read") ){
+                this.ejecucion.ejecutar(linea);
+                pilaEjecucion.pop();
+            }
+            else if (linea.startsWith("if")){
+                String inicio = pilaEjecucion.peek();
+                pilaEjecucion.pop();
+                boolean ifStat = true;
+                boolean elseStat = false;
+                int ifCount = 1;
+                Stack<String> ifIns = new Stack<>();
+                Stack<String> elseIns = new Stack<>();
+                String instruccion = pilaEjecucion.peek();
+                while(ifCount != 0){
+                    if(instruccion.equals("else")){
+                        elseStat = true;
+                        ifStat = false;
+                    }
+                    else{
+                        if(ifStat){
+                            ifIns.push(instruccion);
+                        }
+                        else if (elseStat){
+                            elseIns.push(instruccion);
+                        }
+                    }
+                    pilaEjecucion.pop();
+                    instruccion = pilaEjecucion.peek();
+                    if(instruccion.equals("endif;")){
+                        ifCount--;
+                    }
+                    else if ( instruccion.startsWith("if")){
+                        ifCount++;
+                    }
+                    
+                }
+                Collections.reverse(ifIns);
+                Collections.reverse(elseIns);
+                pilaEjecucion.pop();
+                
+                String condicion = inicio.substring(3,inicio.length()-5);
+                if(this.ejecucion.comprobarVariables(condicion)){
+                    if(this.ejecucion.verificarCondicion(condicion)){
+                        this.ejecutar(ifIns);
+                    }
+                    else{
+                        this.ejecutar(elseIns);
+                    }
+                }
+            }
+            else if( linea.startsWith("while")){
+                String inicio = pilaEjecucion.peek();
+                pilaEjecucion.pop();
+                Stack<String> instrucciones = new Stack<>();
+                String instruccion = pilaEjecucion.peek();
+                while(!instruccion.equals("wend;")){
+                    instrucciones.push(instruccion);
+                    pilaEjecucion.pop();
+                    instruccion = pilaEjecucion.peek();
+                }
+                pilaEjecucion.pop();
 
-            String x = this.pilaEjecucion.peek();
-            System.out.println(x);
-            this.pilaEjecucion.pop();
+                String condicion = inicio.substring(6, inicio.length()-3);
+                Collections.reverse(instrucciones);
+                if(this.ejecucion.comprobarVariables(condicion)){
+                    while(this.ejecucion.verificarCondicion(condicion)){
+                        this.ejecutar(instrucciones);
+                    }
+                }
+            }
         }
     }
 
     public boolean parseCodigo(){
-        if(pila.size() != 0){
+        while(!this.pila.empty()){
             String linea = pila.peek();
             if(!parseInstruccion(linea)){
-                System.out.println("fallo");
+                System.out.println("ERROR");
                 return false;
             }
             this.pila.pop();
-            // parseCodigo();
         }
-        System.out.println("exito");
+        System.out.println("Se parseo el codigo con Exito");
+        Collections.reverse(this.pilaTermino);
         return true;
     }
 
@@ -43,16 +110,19 @@ public class Parser {
                 if(!parseInicializacion(linea)){
                     return false;
                 }
+                this.pilaTermino.push(linea);
             }
             else if(linea.startsWith("r")){
                 if(!parseRead(linea)){
                     return false;
                 }
+                this.pilaTermino.push(linea);
             }
             else if(linea.startsWith("wr")){
                 if(!parseWrite(linea)){
                     return false;
                 }
+                this.pilaTermino.push(linea);
             }
             else if(linea.startsWith("i")){
                 if(!parseIf(linea)){
@@ -83,22 +153,23 @@ public class Parser {
                         return false;
                     }
                     else{
-                        this.pilaEjecucion.push(linea);
+                        this.pilaTermino.push(linea);
                         this.pila.pop();                   
                         String aux = this.pila.peek();
                         aux = aux.replace("\t","");
                         boolean hayElse = false;
                         while(!this.pila.empty()){
                             if(aux.equals("endif;")){
-                                this.pilaEjecucion.push(aux);
+                                this.pilaTermino.push(aux);
                                 return true;
                             }
                             else if ( aux.equals("else") && !hayElse){
+                                this.pilaTermino.push(aux);
                                 hayElse = true;
                             }
                             else if(this.parseInstruccion(aux)){
                                 if(!aux.startsWith("if") && !aux.startsWith("while")){
-                                    this.pilaEjecucion.push(aux);
+                                    
                                 }
                             }
                             else{
@@ -138,18 +209,18 @@ public class Parser {
                         return false;
                     }
                     else{
-                        this.pilaEjecucion.push(linea);
+                        this.pilaTermino.push(linea);
                         this.pila.pop();                   
                         String aux = this.pila.peek();
                         aux = aux.replace("\t","");
                         while(!this.pila.empty()){
                             if(aux.equals("wend;")){
-                                this.pilaEjecucion.push(aux);
+                                this.pilaTermino.push(aux);
                                 return true;
                             }
                             else if(this.parseInstruccion(aux)){
                                 if(!aux.startsWith("while") && !aux.startsWith("if")){
-                                    this.pilaEjecucion.push(aux);
+                                    
                                 }
                             }
                             else{
@@ -189,31 +260,24 @@ public class Parser {
                         if( caracteres[i+1].equals("=")){
                             String aux = linea.substring(i+4,linea.length()-1);
                             if(!parseValor(aux)){
-                                System.out.println("owo");
                                 return false;
                             }
                         }
                         else{
-                            System.out.println("uwu");
                             return false;
                         }
-                        //this.ejecucion.ejecutar(linea);
                         return true;
                     }
                     else{
-                        System.out.println("aca entonces?");
                         return false;
                     }
                 }
             }
             else{
-                System.out.println("xd");
                 return false;
             }
-            
         }
         else{
-            System.out.println("dx");
             return false;
         }
         return true;
@@ -235,7 +299,6 @@ public class Parser {
         else{
             return false;
         }
-        //this.ejecucion.ejecutar(linea);
         return true;
     }
 
@@ -256,7 +319,6 @@ public class Parser {
         else{
             return false;
         }
-        //this.ejecucion.ejecutar(linea);
         return true;
     }
 
@@ -343,11 +405,9 @@ public class Parser {
 
     public boolean parseCondicion (String op) {
         String[] token = op.split(" "); //separamos por espacio
-        //System.out.println(op);
-        for (int i=0; i< token.length; i++) {
-            System.out.print("[" + token[i] + "] ");
-        }
-        //System.out.println();
+        // for (int i=0; i< token.length; i++) {
+        //     System.out.print("[" + token[i] + "] ");
+        // }
         for (int i = 0; i < token.length; i++) {
             if (this.parseCondicional(token[i])) {
                 int y = i;
@@ -364,13 +424,11 @@ public class Parser {
                         s = s + " " + aux[j];
                     }
                 }
-                //System.out.println(s);
                 if (this.parseOperacion(s) == true) {
                 }
                 else if (this.parseValor(s) == true) {
                 }
                 else {
-                    //System.out.println("Error de sintaxis");
                     return false;
                 }
                 y = i+1;
@@ -392,32 +450,25 @@ public class Parser {
                         s = s + " " + aux_2[j];
                     }
                 }
-                //System.out.println(s);
                 if (this.parseOperacion(s) == true) {
                 }
                 else if (this.parseValor(s) == true) {
                 }
                 else {
-                    //System.out.println("Error de sintaxis");
                     return false;
                 }
-
-                //System.out.println("Escrito correctamente");
                 return true;
             }
         }
-        //System.out.println("Error de sintaxis en el condicional");
         return false;
     }
 
     public boolean parseOperacion(String op) {
 
         String[] token = op.split(" "); //separamos por espacio
-        //System.out.println(op);
-        for (int i=0; i< token.length; i++) {
-            System.out.print("[" + token[i] + "] ");
-        }
-        //System.out.println();
+        // for (int i=0; i< token.length; i++) {
+        //     System.out.print("[" + token[i] + "] ");
+        // }
         int p_iniciales=0; // numero de parentesis iniciales
         int p_finales=0; //numero de parentesis finales
         for (int i = 0; i < token.length ; i++) {
@@ -430,7 +481,6 @@ public class Parser {
                     }
                 }
                 else if (i==token.length-1) {
-                    //System.out.println("Error de sintaxis");
                     return false;
                 }
                 else {
@@ -476,8 +526,6 @@ public class Parser {
                         }
                         y++;
                     }
-                    //System.out.println("Este es el string: " + s);
-                    //System.out.println();
                     boolean b = parseOperacion(s);
                     if (b!=true) {
                         return false;
@@ -485,8 +533,6 @@ public class Parser {
                     i=aux_i-1;
                 }
                 else {
-                    //System.out.println(token[i]);
-                    //System.out.println("Error de sintaxis paréntesis inicial");
                     return false;
                 }
             }
@@ -496,8 +542,6 @@ public class Parser {
                     break;
                 }
                 else if (i==0) {
-                   // System.out.println(token[i]);
-                    //System.out.println("Error de sintaxis parentesis final");
                     return false;
                 }
                 else if (this.parseOperando(token[i+1])==true || this.parseValor(token[i-1]) == true) {
@@ -508,14 +552,11 @@ public class Parser {
 
                 }
                 else {
-                    //System.out.println(token[i]);
-                    //System.out.println("Error de sintaxis parentesis final");
                     return false;
                 }
             }
             else if (this.parseOperando(token[i]) == true) {
                 if (i==0 || i== token.length-1) {
-                    //System.out.println("Error de sintaxis operando");
                     return false;
                 }
                 if (token[i+1].equals("(") || token[i-1].equals(")") || token[i-1].equals(")")) {
@@ -528,8 +569,6 @@ public class Parser {
                 
 
                 else {
-                    //System.out.println(token[i]);
-                    //System.out.println("Error de sintaxis operando");
                     return false;
                 }
             }
@@ -550,26 +589,18 @@ public class Parser {
                     }
 
                     else {
-
-                        //System.out.println(token[i]);
-                        //System.out.println("Error de sintaxis valor");
                         return false;
                     }
 
                 }
             }
             else {
-                //System.out.println(token[i]);
-                //System.out.println("Error de sintaxis general");
                 return false;
             }
         }
         if (p_iniciales != p_finales) { //se compara el numero de parentesis iniciales y finales. Debe ser el mismo para que la sintaxis sea correcta
-            //System.out.println(p_iniciales + " " + p_finales);
-            //System.out.println("Error de sintaxis. Número de paréntesis no coincide");
             return false;
         }
-        //System.out.println("Está escrito correctamente");
         return true;
     }
 
@@ -609,4 +640,11 @@ public class Parser {
         }
     }
 
+    public Stack<String> getPilaTermino() {
+        return pilaTermino;
+    }
+
+    public void setPilaTermino(Stack<String> pilaTermino) {
+        this.pilaTermino = pilaTermino;
+    }
 }
