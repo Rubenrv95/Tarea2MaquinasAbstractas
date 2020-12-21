@@ -14,6 +14,9 @@ public class Main {
         while(entrada.hasNextLine()){
             linea = entrada.nextLine();
             pila.push(linea);
+            if( linea.isEmpty()){
+                break;
+            }
         }
         Collections.reverse(pila);
         Parser p = new Parser(pila);
