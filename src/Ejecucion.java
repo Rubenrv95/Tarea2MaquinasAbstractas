@@ -166,7 +166,7 @@ public class Ejecucion {
         if(str.startsWith("$")){
             if(!str.contains(" ")){
                 if(this.variables.containsKey(str)){
-                    //System.out.println(this.variables.get(str));
+                    System.out.println(this.variables.get(str));
                 }
             }
             else{
@@ -281,7 +281,6 @@ public class Ejecucion {
         BigInteger x = this.calcular(parte1);
         BigInteger y = this.calcular(parte2);
 
-        System.out.println(x);
         switch (condicional) {
             case "<":
                 if (x.compareTo(y) == -1) {
