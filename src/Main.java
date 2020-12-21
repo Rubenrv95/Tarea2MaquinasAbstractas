@@ -11,9 +11,12 @@ public class Main {
         Scanner entrada = new Scanner(System.in);
         
         String linea = entrada.nextLine();
-        while(linea.length()>0){
+        while(entrada.hasNextLine()){
             pila.push(linea);
             linea = entrada.nextLine();
+            if( linea.isEmpty()){
+                break;
+            }
         }
         Collections.reverse(pila);
         Parser p = new Parser(pila);

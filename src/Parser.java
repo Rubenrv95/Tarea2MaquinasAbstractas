@@ -57,6 +57,8 @@ public class Parser {
                 Collections.reverse(elseIns);
                 pilaEjecucion.pop();
                 
+                System.out.println(ifIns);
+                System.out.println(elseIns);
                 String condicion = inicio.substring(3,inicio.length()-5);
                 if(this.ejecucion.comprobarVariables(condicion)){
                     if(this.ejecucion.verificarCondicion(condicion)){
@@ -81,9 +83,12 @@ public class Parser {
 
                 String condicion = inicio.substring(6, inicio.length()-3);
                 Collections.reverse(instrucciones);
+                System.out.println(instrucciones);
                 if(this.ejecucion.comprobarVariables(condicion)){
+                    System.out.println("sale?");
                     while(this.ejecucion.verificarCondicion(condicion)){
-                        this.ejecutar(instrucciones);
+                        Stack<String> aux = (Stack<String>) instrucciones.clone();
+                        this.ejecutar(aux);
                     }
                 }
             }
